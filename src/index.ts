@@ -13,6 +13,7 @@ generatorHandler({
     };
   },
   async onGenerate(options: GeneratorOptions) {
+    // options 的范例文件参考: docs/generated-config.json
     const cfg = parseConfig(options.generator.config, options.schemaPath);
     const models = toModelDescriptors(options.dmmf);
     await emitAll({
