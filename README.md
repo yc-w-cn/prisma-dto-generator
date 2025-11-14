@@ -1,5 +1,9 @@
 # Prisma DTO Generator (Swagger)
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-prisma--dto--generator-blue.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Author](https://img.shields.io/badge/Author-Wang%20Yuchen-orange.svg)](mailto:contact@wangyuchen.cn)
+
 一个专为 Prisma Schema 设计的 DTO（Data Transfer Object）生成器，专注于为 Swagger/OpenAPI 文档提供类型安全的 DTO 类。
 
 ## 功能特性
@@ -203,7 +207,16 @@ export class UserCreateDto {
 
 ## 贡献
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+欢迎提交 [Issue](https://github.com/yc-w-cn/prisma-dto-generator/issues) 和 [Pull Request](https://github.com/yc-w-cn/prisma-dto-generator/pulls) 来改进这个项目！
+
+### 仓库地址
+🔗 [GitHub Repository](https://github.com/yc-w-cn/prisma-dto-generator)
+
+### 作者信息
+👨‍💻 **作者**: Yuchen Wang  
+📧 **联系邮箱**: contact@wangyuchen.cn  
+
+如果您在使用过程中遇到问题或有改进建议，请在 GitHub 上创建 Issue。
 
 ## 许可证
 
