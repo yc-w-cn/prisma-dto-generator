@@ -10,7 +10,6 @@ export async function onGenerate() {
   const dir = mkdtempSync(join(tmpdir(), 'dto-'));
   const cfg: GeneratorConfig = {
     output: dir,
-    emitRelations: false,
     emitUpdateReadonly: false,
     swaggerLibrary: 'nestjs',
   };

@@ -2,7 +2,6 @@ import { dirname, join } from 'node:path';
 
 export type GeneratorConfig = {
   output: string;
-  emitRelations: boolean;
   emitUpdateReadonly: boolean;
   swaggerLibrary: 'nestjs';
   prismaClientPath?: string;
@@ -35,13 +34,11 @@ export function parseConfig(
     output = join(schemaDir, output);
   }
 
-  const emitRelations = pickBool(input.emitRelations, false);
   const emitUpdateReadonly = pickBool(input.emitUpdateReadonly, false);
   const swaggerLibrary = 'nestjs' as const;
   const prismaClientPath = pickStrOpt(input.prismaClientPath);
   return {
     output,
-    emitRelations,
     emitUpdateReadonly,
     swaggerLibrary,
     prismaClientPath,

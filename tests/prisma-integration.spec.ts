@@ -176,7 +176,6 @@ enum UserRole {
     // 创建配置
     const config = {
       output: outputDir,
-      emitRelations: true,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
     };
@@ -358,7 +357,6 @@ enum UserRole {
 
     const config = {
       output: outputDir,
-      emitRelations: true,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
     };

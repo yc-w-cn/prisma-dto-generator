@@ -12,11 +12,8 @@
 ## 功能特性
 
 - **🚀 自动 DTO 生成**: 基于 Prisma Schema 自动生成对应的 DTO 类
-- **📋 支持多种 DTO 类型**: 
-  - 基础 DTO（Base DTO）- 包含所有模型字段
-  - 创建 DTO（Create DTO）- 用于创建新实体的字段
-  - 更新 DTO（Update DTO）- 用于更新现有实体的字段
-- **🔗 关系支持**: 可选生成关联模型的 DTO
+- **📋 基础 DTO 生成**: 为每个模型生成基础 DTO，包含所有模型字段
+
 - **🎯 Swagger 优化**: 专门针对 Swagger/OpenAPI 文档格式优化
 - **🔧 高度可配置**: 支持灵活的输出配置和生成选项
 
@@ -105,22 +102,35 @@ model Post {
 
 在你的 Prisma schema 中添加生成器配置：
 
+#### 基本配置示例
 ```prisma
 generator dto {
   provider = "prisma-dto-generator"
   output           = "./generated/dto"
-  emitRelations    = true
   emitUpdateReadonly = false
-  dtoKinds         = ["base", "create", "update"]
+}
+```
+
+#### 高级配置示例（推荐用于自定义目录结构）
+```prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma-client"
+}
+
+generator dto {
+  provider = "prisma-dto-generator"
+  output           = "../src/generated/prisma-class"
+  prismaClientPath = "../src/generated/prisma-client"  # 确保枚举导入路径正确
+  emitUpdateReadonly = false
 }
 ```
 
 #### 配置选项说明
 
 - `output`: DTO 文件的输出目录（默认：`./generated/dto`）
-- `emitRelations`: 是否生成关联模型的 DTO（默认：`false`）
+- `prismaClientPath`: Prisma Client 的输出目录路径，用于正确计算枚举导入的相对路径（可选，默认使用 `../src/generated/prisma-client`）
 - `emitUpdateReadonly`: 是否在更新 DTO 中包含只读字段（默认：`false`）
-- `dtoKinds`: 要生成的 DTO 类型数组（默认：`["base", "create", "update"]`）
 
 ### 3. 运行生成
 
@@ -131,13 +141,63 @@ npx prisma generate
 
 生成的 DTO 文件将保存在指定的输出目录中。
 
+## 关于 prismaClientPath 配置的重要说明
+
+### 为什么需要这个配置？
+
+当你的 Prisma schema 中包含枚举字段时，生成的 DTO 需要正确导入这些枚举类型。`prismaClientPath` 配置项用于指定 Prisma Client 的输出目录，这样 DTO 生成器就能正确计算枚举导入的相对路径。
+
+### 配置示例对比
+
+**情况1：默认配置（不推荐用于自定义目录结构）**
+```prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma-client"
+}
+
+generator dto {
+  provider = "prisma-dto-generator"
+  output           = "../src/generated/prisma-class"
+  # 未设置 prismaClientPath，将使用默认路径
+}
+```
+
+**问题**：枚举导入路径可能不正确，导致 TypeScript 编译错误。
+
+**情况2：推荐配置（正确设置相对路径）**
+```prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma-client"
+}
+
+generator dto {
+  provider = "prisma-dto-generator"
+  output           = "../src/generated/prisma-class"
+  prismaClientPath = "../src/generated/prisma-client"  # 正确设置
+}
+```
+
+**优势**：
+- 枚举导入路径正确计算
+- 避免 TypeScript 编译错误
+- 支持自定义目录结构
+
+### 何时需要设置这个配置？
+
+如果你遇到以下情况，建议设置 `prismaClientPath`：
+1. 使用了自定义的 Prisma Client 输出目录
+2. DTO 文件生成位置与 Prisma Client 输出目录不在同一层级
+3. 出现枚举导入路径错误
+
 ## 生成的 DTO 示例
 
-基于上面的 User 和 Post 模型，生成器会创建以下 DTO 文件：
+基于上面的 User 和 Post 模型，生成器会为每个模型生成基础 DTO 文件：
 
-### UserBaseDto.ts
+### UserDto.ts
 ```typescript
-export class UserBaseDto {
+export class UserDto {
   id: number;
   email: string;
   name?: string;
@@ -146,29 +206,16 @@ export class UserBaseDto {
 }
 ```
 
-### UserCreateDto.ts
+### PostDto.ts
 ```typescript
-export class UserCreateDto {
-  email: string;
-  name?: string;
-}
-```
-
-### UserUpdateDto.ts
-```typescript
-export class UserUpdateDto {
-  email?: string;
-  name?: string;
-}
-```
-
-### PostCreateDto.ts (启用关系时)
-```typescript
-export class PostCreateDto {
+export class PostDto {
+  id: number;
   title: string;
   content?: string;
-  published?: boolean;
+  published: boolean;
   authorId: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
@@ -179,20 +226,20 @@ export class PostCreateDto {
 生成的 DTO 类可以直接用于 Swagger/OpenAPI 文档：
 
 ```typescript
-import { UserCreateDto, UserUpdateDto, UserBaseDto } from './generated/dto';
+import { UserDto, PostDto } from './generated/dto';
 
 @Controller('users')
 export class UserController {
   @Post()
-  async create(@Body() createUserDto: UserCreateDto): Promise<UserBaseDto> {
+  async create(@Body() createUserDto: UserDto): Promise<UserDto> {
     // 实现创建用户逻辑
   }
 
   @Put(':id')
   async update(
     @Param('id') id: number,
-    @Body() updateUserDto: UserUpdateDto,
-  ): Promise<UserBaseDto> {
+    @Body() updateUserDto: UserDto,
+  ): Promise<UserDto> {
     // 实现更新用户逻辑
   }
 }
@@ -205,7 +252,13 @@ export class UserController {
 ```typescript
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserCreateDto {
+export class UserDto {
+  @ApiProperty({ 
+    example: 1,
+    description: '用户ID' 
+  })
+  id: number;
+
   @ApiProperty({ 
     example: 'user@example.com',
     description: '用户邮箱' 
@@ -218,6 +271,18 @@ export class UserCreateDto {
     required: false 
   })
   name?: string;
+
+  @ApiProperty({ 
+    example: '2023-01-01T00:00:00.000Z',
+    description: '创建时间' 
+  })
+  createdAt: Date;
+
+  @ApiProperty({ 
+    example: '2023-01-01T00:00:00.000Z',
+    description: '更新时间' 
+  })
+  updatedAt: Date;
 }
 ```
 

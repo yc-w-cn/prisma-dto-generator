@@ -80,7 +80,6 @@ const relationModel: ModelDescriptor = {
 
 const baseConfig: GeneratorConfig = {
   output: '',
-  emitRelations: false,
   emitUpdateReadonly: false,
   swaggerLibrary: 'nestjs',
 };

@@ -2,31 +2,6 @@ import { parseConfig } from '../src/core/config';
 
 describe('配置验证', () => {
   describe('布尔值配置验证', () => {
-    test('应该处理布尔值 emitRelations 配置', () => {
-      const config = parseConfig({ emitRelations: true });
-      expect(config.emitRelations).toBe(true);
-    });
-
-    test('应该处理字符串布尔值 emitRelations 配置', () => {
-      const config = parseConfig({ emitRelations: 'true' });
-      expect(config.emitRelations).toBe(false); // 字符串应使用默认值
-    });
-
-    test('应该处理数字布尔值 emitRelations 配置', () => {
-      const config = parseConfig({ emitRelations: 1 });
-      expect(config.emitRelations).toBe(false); // 数字应使用默认值
-    });
-
-    test('应该处理 null emitRelations 配置', () => {
-      const config = parseConfig({ emitRelations: null });
-      expect(config.emitRelations).toBe(false);
-    });
-
-    test('应该处理 undefined emitRelations 配置', () => {
-      const config = parseConfig({ emitRelations: undefined });
-      expect(config.emitRelations).toBe(false);
-    });
-
     test('应该处理 emitUpdateReadonly 配置', () => {
       const config = parseConfig({ emitUpdateReadonly: true });
       expect(config.emitUpdateReadonly).toBe(true);
@@ -80,7 +55,6 @@ describe('配置验证', () => {
       const config = parseConfig(
         {
           output: '../generated/dto',
-          emitRelations: true,
           emitUpdateReadonly: false,
           prismaClientPath: '../prisma-client',
         },
@@ -88,7 +62,6 @@ describe('配置验证', () => {
       );
 
       expect(config.output).toBe('/path/generated/dto'); // 相对路径会基于schema路径解析为绝对路径
-      expect(config.emitRelations).toBe(true);
       expect(config.emitUpdateReadonly).toBe(false);
       expect(config.prismaClientPath).toBe('../prisma-client');
       expect(config.swaggerLibrary).toBe('nestjs');
@@ -101,7 +74,6 @@ describe('配置验证', () => {
       });
 
       expect(config.output).toBe('./custom/dto');
-      expect(config.emitRelations).toBe(false);
       expect(config.emitUpdateReadonly).toBe(false);
       expect(config.prismaClientPath).toBeUndefined();
       expect(config.swaggerLibrary).toBe('nestjs');
@@ -111,7 +83,6 @@ describe('配置验证', () => {
       const config = parseConfig({});
 
       expect(config.output).toBe('./generated/dto');
-      expect(config.emitRelations).toBe(false);
       expect(config.emitUpdateReadonly).toBe(false);
       expect(config.prismaClientPath).toBeUndefined();
       expect(config.swaggerLibrary).toBe('nestjs');
@@ -125,7 +96,6 @@ describe('配置验证', () => {
       });
 
       expect(config.output).toBe('./dto');
-      expect(config.emitRelations).toBe(false);
       // 无效属性应该被忽略
       expect((config as any).invalidProperty).toBeUndefined();
       expect((config as any).anotherInvalid).toBeUndefined();
