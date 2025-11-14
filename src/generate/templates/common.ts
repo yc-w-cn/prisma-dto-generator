@@ -1,9 +1,27 @@
-import type { FieldDescriptor } from '../../core/dmmf';
-import { toSwaggerMeta, toTsType } from '../../core/type-map';
+import type { FieldDescriptor, ModelDescriptor } from '@/core/dmmf';
+import { toSwaggerMeta, toTsType } from '@/core/type-map';
 
-export function renderImportsOptional(optional: boolean): string {
-  const base = optional ? `ApiProperty, ApiPropertyOptional` : `ApiProperty`;
-  return `import { ${base} } from '@nestjs/swagger'\n`;
+export function renderImports(
+  model: ModelDescriptor,
+  optionalMode: boolean,
+): string {
+  const usedDecorators = new Set<string>();
+
+  // 分析模型字段，确定需要哪些装饰器
+  for (const field of model.fields) {
+    const isOptional = optionalMode || !field.isRequired;
+    const decorator = isOptional ? 'ApiPropertyOptional' : 'ApiProperty';
+    usedDecorators.add(decorator);
+  }
+
+  // 如果没有使用任何装饰器，返回空字符串
+  if (usedDecorators.size === 0) {
+    return '';
+  }
+
+  // 生成导入语句
+  const decorators = Array.from(usedDecorators).join(', ');
+  return `import { ${decorators} } from '@nestjs/swagger';\n`;
 }
 
 export function renderJSDoc(title: string, description?: string): string {
