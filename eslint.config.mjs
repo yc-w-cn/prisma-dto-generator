@@ -46,6 +46,7 @@ export default defineConfig(
       },
       globals: {
         console: 'readonly', // 允许 console
+        __APP_VERSION__: 'readonly', // 声明全局变量
         ...globals.node,
         ...globals.jest,
       },

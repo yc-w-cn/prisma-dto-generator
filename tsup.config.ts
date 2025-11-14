@@ -1,4 +1,11 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { defineConfig } from 'tsup';
+
+const pkg = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'),
+);
 
 export default defineConfig({
   entry: ['src/index.ts'],
@@ -12,5 +19,8 @@ export default defineConfig({
     options.alias = {
       '@': './src',
     };
+  },
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
   },
 });
