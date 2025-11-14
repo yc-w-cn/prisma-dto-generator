@@ -4,7 +4,7 @@ export type GeneratorConfig = {
   emitUpdateReadonly: boolean;
   swaggerLibrary: 'nestjs';
   fileMaxLines: number;
-  dtoKinds: ('base' | 'create' | 'update')[];
+  dtoKinds: readonly ('base' | 'create' | 'update')[];
 };
 
 export function parseConfig(input: Record<string, unknown>): GeneratorConfig {
