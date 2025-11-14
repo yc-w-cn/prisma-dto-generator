@@ -106,8 +106,8 @@ model Post {
 在你的 Prisma schema 中添加生成器配置：
 
 ```prisma
-generator dto_generator {
-  provider = "@yc-w-cn/prisma-dto-generator"
+generator dto {
+  provider = "prisma-dto-generator"
   output           = "./generated/dto"
   emitRelations    = true
   emitUpdateReadonly = false
