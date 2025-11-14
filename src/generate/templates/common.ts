@@ -34,8 +34,10 @@ export function renderImports(
   if (usedEnums.size > 0) {
     const enums = Array.from(usedEnums).join(', ');
 
-    // 直接使用配置的prismaClientPath路径
-    const enumPath = prismaClientPath || '@/generated/prisma-client/enums';
+    // 直接使用配置的prismaClientPath路径，如果未配置则使用默认路径
+    const enumPath = prismaClientPath
+      ? `${prismaClientPath}/enums`
+      : '@/generated/prisma-client/enums';
 
     importStatements.push(`import { ${enums} } from '${enumPath}';`);
   }
