@@ -28,8 +28,6 @@ export {
 
 // 导出模板生成功能
 export { renderBaseDto } from './generate/templates/base-dto';
-export { renderCreateDto } from './generate/templates/create-dto';
-export { renderUpdateDto } from './generate/templates/update-dto';
 
 // 导出工具函数
 export { ensureDir, writeTextFile } from './utils/fs';
@@ -46,12 +44,7 @@ export async function generateDTOs(
   config: GeneratorConfig,
   schemaPath: string,
 ): Promise<void> {
-  await emitAll({
-    outputDir: config.output,
-    models,
-    config,
-    schemaPath,
-  });
+  emitAll(config, models, schemaPath, config.output);
 }
 
 /**

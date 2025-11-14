@@ -5,7 +5,6 @@ export type GeneratorConfig = {
   emitRelations: boolean;
   emitUpdateReadonly: boolean;
   swaggerLibrary: 'nestjs';
-  dtoKinds: readonly ('base' | 'create' | 'update')[];
   prismaClientPath?: string;
 };
 
@@ -26,28 +25,25 @@ export function parseConfig(
   if (
     schemaPath &&
     input.output &&
-    (output.startsWith('../') || output.startsWith('./'))
+    typeof input.output === 'string' &&
+    (output.startsWith('../') ||
+      output.startsWith('./') ||
+      output.includes('\\'))
   ) {
     const schemaDir = dirname(schemaPath);
+    // 使用规范化路径处理复杂的相对路径组合
     output = join(schemaDir, output);
   }
 
   const emitRelations = pickBool(input.emitRelations, false);
   const emitUpdateReadonly = pickBool(input.emitUpdateReadonly, false);
   const swaggerLibrary = 'nestjs' as const;
-  const kindsRaw = input.dtoKinds;
-  const dtoKinds: ('base' | 'create' | 'update')[] = Array.isArray(kindsRaw)
-    ? (kindsRaw as unknown[])
-        .map(String)
-        .filter((k) => k === 'base' || k === 'create' || k === 'update')
-    : ['base', 'create', 'update'];
   const prismaClientPath = pickStrOpt(input.prismaClientPath);
   return {
     output,
     emitRelations,
     emitUpdateReadonly,
     swaggerLibrary,
-    dtoKinds,
     prismaClientPath,
   };
 }

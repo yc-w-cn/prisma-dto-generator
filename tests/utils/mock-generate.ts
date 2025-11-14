@@ -13,7 +13,6 @@ export async function onGenerate() {
     emitRelations: false,
     emitUpdateReadonly: false,
     swaggerLibrary: 'nestjs',
-    dtoKinds: ['base', 'create', 'update'],
   };
   const models: ModelDescriptor[] = [
     {
@@ -44,10 +43,5 @@ export async function onGenerate() {
       ],
     },
   ];
-  await emitAll({
-    outputDir: dir,
-    models,
-    config: cfg,
-    schemaPath: '/path/to/schema.prisma',
-  });
+  emitAll(cfg, models, '/path/to/schema.prisma', dir);
 }

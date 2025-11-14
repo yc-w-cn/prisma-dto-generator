@@ -16,11 +16,6 @@ generatorHandler({
     // options 的范例文件参考: docs/generated-config.json
     const cfg = parseConfig(options.generator.config, options.schemaPath);
     const models = toModelDescriptors(options.dmmf);
-    await emitAll({
-      outputDir: cfg.output,
-      models,
-      config: cfg,
-      schemaPath: options.schemaPath,
-    });
+    emitAll(cfg, models, options.schemaPath, cfg.output);
   },
 });

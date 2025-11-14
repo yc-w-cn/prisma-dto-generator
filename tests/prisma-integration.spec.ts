@@ -179,16 +179,10 @@ enum UserRole {
       emitRelations: true,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
-      dtoKinds: ['base', 'create', 'update'] as const,
     };
 
     // 生成 DTO
-    await emitAll({
-      outputDir,
-      models,
-      config,
-      schemaPath: '/path/to/schema.prisma',
-    });
+    emitAll(config, models, '/path/to/schema.prisma', outputDir);
 
     // 验证生成的输出
     const generatedFiles = readdirSync(outputDir);
@@ -205,17 +199,16 @@ enum UserRole {
       );
       expect(baseDtoFile).toBeDefined();
 
-      // 检查创建 DTO 文件 (命名模式: create-{modelName}.dto.ts)
+      // 现在只生成基础DTO，不生成创建和更新DTO
       const createDtoFile = generatedFiles.find(
         (f) => f === `create-${modelName}.dto.ts`,
       );
-      expect(createDtoFile).toBeDefined();
+      expect(createDtoFile).toBeUndefined();
 
-      // 检查更新 DTO 文件 (命名模式: update-{modelName}.dto.ts)
       const updateDtoFile = generatedFiles.find(
         (f) => f === `update-${modelName}.dto.ts`,
       );
-      expect(updateDtoFile).toBeDefined();
+      expect(updateDtoFile).toBeUndefined();
     }
 
     // 验证生成的代码内容
@@ -368,22 +361,16 @@ enum UserRole {
       emitRelations: true,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
-      dtoKinds: ['base', 'create', 'update'] as const,
     };
-
-    await emitAll({
-      outputDir,
-      models,
-      config,
-      schemaPath: '/path/to/schema.prisma',
-    });
+    // 生成 DTO
+    emitAll(config, models, '/path/to/schema.prisma', outputDir);
 
     // 验证生成了多少个文件
     const generatedFiles = readdirSync(outputDir);
     expect(generatedFiles.length).toBeGreaterThan(0);
 
-    // 应该为每个模型生成 3 种类型的 DTO (base, create, update)
-    expect(generatedFiles.length).toBeGreaterThanOrEqual(9); // 3 models * 3 dto types
+    // 应该为每个模型生成基础 DTO
+    expect(generatedFiles.length).toBeGreaterThanOrEqual(3); // 3 models * 1 dto type
   });
 
   afterEach(() => {
