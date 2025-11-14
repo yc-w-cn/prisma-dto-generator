@@ -1,0 +1,22 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.renderControlCharacters": false,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "window.title": "${rootName}",
+  "eslint.enable": true,
+  "eslint.lintTask.enable": true,
+  "eslint.format.enable": true,
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "eslint.useFlatConfig": true,
+  "eslint.options": {
+    "overrideConfigFile": "./eslint.config.mjs"
+  },
+  "trae.tab.enableAutoImport": true,
+}
