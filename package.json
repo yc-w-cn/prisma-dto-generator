@@ -1,13 +1,15 @@
 {
   "name": "@yc-w-cn/prisma-dto-generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "专为 Prisma Schema 设计的 DTO 生成器，专注于为 Swagger/OpenAPI 文档提供类型安全的 DTO 类",
   "author": "Wang Yuchen <contact@wangyuchen.cn>",
   "license": "MIT",
   "private": false,
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "@yc-w-cn/prisma-dto-generator": "dist/index.js"
+  },
   "files": [
     "dist"
   ],

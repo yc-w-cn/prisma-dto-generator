@@ -2,6 +2,16 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.1.1] - 2025-11-15
+
+### 新增 (Added)
+- 动态获取 package.json 中的版本号替换硬编码
+
+### 修复 (Fixed)
+- 修复包名使用作用域包后无法执行的问题（`/bin/sh: @yc-w-cn/prisma-dto-generator: No such file or directory`）
+- 添加 `bin` 配置到 package.json，修复 Prisma 找不到生成器可执行文件的问题
+- 修复 TypeScript 配置，移除 `"type": "module"` 改为 CommonJS 格式，确保生成器兼容 Prisma 环境
+
 ## [v0.1.0] - 2025-11-15
 
 ### 新增 (Added)
