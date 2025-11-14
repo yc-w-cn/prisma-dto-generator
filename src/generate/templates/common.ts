@@ -48,7 +48,7 @@ export function renderImports(
   }
 
   // 按照指定顺序排列导入语句，中间添加空行
-  return importStatements.join('\n\n') + '\n\n';
+  return importStatements.join('\n\n') + '\n';
 }
 
 export function renderJSDoc(title: string, description?: string): string {
