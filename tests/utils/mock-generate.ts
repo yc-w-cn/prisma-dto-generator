@@ -44,5 +44,10 @@ export async function onGenerate() {
       ],
     },
   ];
-  await emitAll({ outputDir: dir, models, config: cfg });
+  await emitAll({
+    outputDir: dir,
+    models,
+    config: cfg,
+    schemaPath: '/path/to/schema.prisma',
+  });
 }

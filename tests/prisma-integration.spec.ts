@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { ModelDescriptor } from '@/core/dmmf';
 import { emitAll } from '@/writer/emitter';
 
-describe('Prisma Schema Integration Test', () => {
+describe('Prisma Schema 集成测试', () => {
   let tempDir: string;
   let schemaContent: string;
 
@@ -56,7 +56,7 @@ enum UserRole {
     writeFileSync(join(tempDir, 'schema.prisma'), schemaContent);
   });
 
-  test('should generate DTOs from Prisma models', async () => {
+  test('应该从Prisma模型生成DTOs', async () => {
     const outputDir = mkdtempSync(join(tmpdir(), 'dto-output-'));
 
     // 创建模拟的模型描述符（基于上面的 schema）
@@ -187,6 +187,7 @@ enum UserRole {
       outputDir,
       models,
       config,
+      schemaPath: '/path/to/schema.prisma',
     });
 
     // 验证生成的输出
@@ -232,7 +233,7 @@ enum UserRole {
     expect(userBaseFileContent.includes('email')).toBeTruthy();
   });
 
-  test('should handle complex schema with relations', async () => {
+  test('应该处理包含关系的复杂schema', async () => {
     const outputDir = mkdtempSync(join(tmpdir(), 'dto-relations-'));
 
     // 创建复杂的模型描述符（包含多对多关系）
@@ -370,7 +371,12 @@ enum UserRole {
       dtoKinds: ['base', 'create', 'update'] as const,
     };
 
-    await emitAll({ outputDir, models, config });
+    await emitAll({
+      outputDir,
+      models,
+      config,
+      schemaPath: '/path/to/schema.prisma',
+    });
 
     // 验证生成了多少个文件
     const generatedFiles = readdirSync(outputDir);

@@ -44,11 +44,13 @@ export { emitAll } from './writer/emitter';
 export async function generateDTOs(
   models: ModelDescriptor[],
   config: GeneratorConfig,
+  schemaPath: string,
 ): Promise<void> {
   await emitAll({
     outputDir: config.output,
     models,
     config,
+    schemaPath,
   });
 }
 
@@ -58,7 +60,8 @@ export async function generateDTOs(
 export async function generateFromDMMF(
   dmmf: any,
   config: GeneratorConfig,
+  schemaPath: string,
 ): Promise<void> {
   const models = toModelDescriptors(dmmf);
-  await generateDTOs(models, config);
+  await generateDTOs(models, config, schemaPath);
 }

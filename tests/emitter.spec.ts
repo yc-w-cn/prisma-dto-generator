@@ -31,11 +31,16 @@ const cfg: GeneratorConfig = {
   dtoKinds: ['base'],
 };
 
-describe('emitter', () => {
-  test('generates DTO files', async () => {
+describe('发射器', () => {
+  test('生成DTO文件', async () => {
     const dir = tmp();
     cfg.output = dir;
-    await emitAll({ outputDir: dir, models: [model], config: cfg });
+    await emitAll({
+      outputDir: dir,
+      models: [model],
+      config: cfg,
+      schemaPath: '/path/to/schema.prisma',
+    });
     const content = readFileSync(join(dir, 'post.dto.ts'), 'utf8');
     expect(content).toContain('export class PostDto');
     expect(content).toContain('ApiProperty');

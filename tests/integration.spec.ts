@@ -1,7 +1,7 @@
 import { onGenerate } from './utils/mock-generate';
 
-describe('generator integration', () => {
-  test('mock onGenerate runs', async () => {
+describe('生成器集成', () => {
+  test('模拟onGenerate运行', async () => {
     await onGenerate();
   });
 });

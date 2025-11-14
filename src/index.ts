@@ -13,8 +13,13 @@ generatorHandler({
     };
   },
   async onGenerate(options: GeneratorOptions) {
-    const cfg = parseConfig(options.generator.config);
+    const cfg = parseConfig(options.generator.config, options.schemaPath);
     const models = toModelDescriptors(options.dmmf);
-    await emitAll({ outputDir: cfg.output, models, config: cfg });
+    await emitAll({
+      outputDir: cfg.output,
+      models,
+      config: cfg,
+      schemaPath: options.schemaPath,
+    });
   },
 });

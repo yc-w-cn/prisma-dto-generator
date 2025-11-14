@@ -13,6 +13,7 @@ type Ctx = {
   outputDir: string;
   models: ModelDescriptor[];
   config: GeneratorConfig;
+  schemaPath: string;
 };
 
 export async function emitAll(ctx: Ctx) {
@@ -23,14 +24,32 @@ export async function emitAll(ctx: Ctx) {
     const className = toPascalCase(m.name);
 
     if (ctx.config.dtoKinds.includes('base')) {
-      emitOne(ctx, renderBaseDto(m, className), `${baseName}.dto.ts`);
+      emitOne(
+        ctx,
+        renderBaseDto(
+          m,
+          className,
+          ctx.schemaPath,
+          ctx.config.prismaClientPath,
+        ),
+        `${baseName}.dto.ts`,
+      );
       exportStatements.push(
         `export { ${className}Dto } from './${baseName}.dto';`,
       );
     }
 
     if (ctx.config.dtoKinds.includes('create')) {
-      emitOne(ctx, renderCreateDto(m, className), `create-${baseName}.dto.ts`);
+      emitOne(
+        ctx,
+        renderCreateDto(
+          m,
+          className,
+          ctx.schemaPath,
+          ctx.config.prismaClientPath,
+        ),
+        `create-${baseName}.dto.ts`,
+      );
       exportStatements.push(
         `export { Create${className}Dto } from './create-${baseName}.dto';`,
       );
@@ -39,7 +58,7 @@ export async function emitAll(ctx: Ctx) {
     if (ctx.config.dtoKinds.includes('update')) {
       emitOne(
         ctx,
-        renderUpdateDto(m, className, ctx.config),
+        renderUpdateDto(m, className, ctx.config, ctx.schemaPath),
         `update-${baseName}.dto.ts`,
       );
       exportStatements.push(

@@ -29,11 +29,16 @@ const model: ModelDescriptor = {
   ],
 };
 
-describe('base dto', () => {
-  test('renders class with ApiProperty', () => {
-    const s = renderBaseDto(model, 'User');
-    expect(s).toMatch('export class UserDto');
-    expect(s).toMatch('ApiProperty');
-    expect(s).toMatch('roles: Role[]');
+describe('基础DTO', () => {
+  test('渲染包含ApiProperty的类', () => {
+    const result = renderBaseDto(
+      model,
+      'User',
+      '/path/to/schema.prisma',
+      '@/generated/prisma-client',
+    );
+    expect(result).toMatch('export class UserDto');
+    expect(result).toMatch('ApiProperty');
+    expect(result).toMatch('roles: Role[]');
   });
 });

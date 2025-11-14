@@ -7,8 +7,14 @@ export function renderUpdateDto(
   model: ModelDescriptor,
   className: string,
   config: GeneratorConfig,
+  schemaPath: string,
 ): string {
-  const imports = renderImports(model, true);
+  const imports = renderImports(
+    model,
+    true,
+    schemaPath,
+    config.prismaClientPath,
+  );
   const header = renderJSDoc(`Update${className}Dto`, '自动生成的更新 DTO');
   const props = model.fields
     .filter((f) => f.kind !== 'object' && !f.isRequired)
