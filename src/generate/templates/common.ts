@@ -43,7 +43,7 @@ export function renderImports(
     // 使用配置的prismaClientPath路径，如果未配置则使用默认路径
     const enumPath = prismaClientPath
       ? join(schemaDir, prismaClientPath, 'enums')
-      : join(schemaDir, '../src/generated/prisma-client/enums');
+      : join(schemaDir, '@/generated/prisma-client/enums');
 
     const relativePath = relative(schemaDir, enumPath).replace(/\\/g, '/'); // 确保使用正斜杠
 
