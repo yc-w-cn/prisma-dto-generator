@@ -7,7 +7,7 @@ export function renderBaseDto(
   prismaClientPath?: string,
 ) {
   const imports = renderImports(model, false, prismaClientPath);
-  const header = renderJSDoc(`${className}Dto`, '自动生成的基础 DTO');
+  const header = renderJSDoc(`${className}Dto`);
   const props = model.fields
     .filter((f) => !f.relationName) // 过滤掉关联字段
     .map((f) => `  ${renderProp(f, false)}`)
