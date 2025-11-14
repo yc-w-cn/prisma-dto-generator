@@ -2,6 +2,15 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.1.2] - 2025-11-15
+
+### 变更 (Changed)
+
+- 使用 tsup 替代 tsc 处理构建，解决 TypeScript 路径别名 (@/*) 在运行时无法正确解析的问题
+
+### 重构 (Refactored)
+- 将bin命令从@yc-w-cn/prisma-dto-generator改为prisma-dto-generator
+
 ## [v0.1.1] - 2025-11-15
 
 ### 新增 (Added)
