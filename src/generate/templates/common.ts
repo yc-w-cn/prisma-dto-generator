@@ -1,12 +1,9 @@
-import { dirname, join, relative } from 'node:path';
-
 import type { FieldDescriptor, ModelDescriptor } from '@/core/dmmf';
 import { toSwaggerMeta, toTsType } from '@/core/type-map';
 
 export function renderImports(
   model: ModelDescriptor,
   optionalMode: boolean,
-  schemaPath: string,
   prismaClientPath?: string,
 ): string {
   const usedDecorators = new Set<string>();
@@ -37,22 +34,10 @@ export function renderImports(
   if (usedEnums.size > 0) {
     const enums = Array.from(usedEnums).join(', ');
 
-    // 计算基于Prisma文件的相对路径
-    const schemaDir = dirname(schemaPath);
+    // 直接使用配置的prismaClientPath路径
+    const enumPath = prismaClientPath || '@/generated/prisma-client/enums';
 
-    // 使用配置的prismaClientPath路径，如果未配置则使用默认路径
-    const enumPath = prismaClientPath
-      ? join(schemaDir, prismaClientPath, 'enums')
-      : join(schemaDir, '@/generated/prisma-client/enums');
-
-    const relativePath = relative(schemaDir, enumPath).replace(/\\/g, '/'); // 确保使用正斜杠
-
-    // 确保路径以./开头，如果没有相对路径前缀
-    const finalPath = relativePath.startsWith('../')
-      ? relativePath
-      : `./${relativePath}`;
-
-    importStatements.push(`import { ${enums} } from '${finalPath}';`);
+    importStatements.push(`import { ${enums} } from '${enumPath}';`);
   }
 
   // 如果没有使用任何导入，返回空字符串

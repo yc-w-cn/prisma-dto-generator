@@ -31,12 +31,7 @@ const model: ModelDescriptor = {
 
 describe('基础DTO', () => {
   test('渲染包含ApiProperty的类', () => {
-    const result = renderBaseDto(
-      model,
-      'User',
-      '/path/to/schema.prisma',
-      '@/generated/prisma-client',
-    );
+    const result = renderBaseDto(model, 'User', '@/generated/prisma-client');
     expect(result).toMatch('export class UserDto');
     expect(result).toMatch('ApiProperty');
     expect(result).toMatch('roles: Role[]');

@@ -4,10 +4,9 @@ import { renderImports, renderJSDoc, renderProp } from './common';
 export function renderBaseDto(
   model: ModelDescriptor,
   className: string,
-  schemaPath: string,
   prismaClientPath?: string,
 ) {
-  const imports = renderImports(model, false, schemaPath, prismaClientPath);
+  const imports = renderImports(model, false, prismaClientPath);
   const header = renderJSDoc(`${className}Dto`, '自动生成的基础 DTO');
   const props = model.fields
     .map((f) => `  ${renderProp(f, false)}`)

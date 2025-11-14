@@ -35,7 +35,7 @@ export function emitAll(
 
     emitOne(
       ctx,
-      renderBaseDto(m, className, ctx.schemaPath, ctx.config.prismaClientPath),
+      renderBaseDto(m, className, ctx.config.prismaClientPath),
       `${baseName}.dto.ts`,
     );
     exportStatements.push(
