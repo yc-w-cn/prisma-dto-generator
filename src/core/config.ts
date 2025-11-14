@@ -16,15 +16,13 @@ export function parseConfig(input: Record<string, unknown>): GeneratorConfig {
   const output = pickStr(input.output, './generated/dto');
   const emitRelations = pickBool(input.emitRelations, false);
   const emitUpdateReadonly = pickBool(input.emitUpdateReadonly, false);
-  const swaggerLibrary: 'nestjs' = 'nestjs';
+  const swaggerLibrary = 'nestjs' as const;
   const fileMaxLines = pickNum(input.fileMaxLines, 100);
   const kindsRaw = input.dtoKinds;
   const dtoKinds: ('base' | 'create' | 'update')[] = Array.isArray(kindsRaw)
     ? (kindsRaw as unknown[])
         .map(String)
-        .filter((k) => k === 'base' || k === 'create' || k === 'update') as (
-        'base' | 'create' | 'update'
-      )[]
+        .filter((k) => k === 'base' || k === 'create' || k === 'update')
     : ['base', 'create', 'update'];
   return {
     output,
