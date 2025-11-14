@@ -36,5 +36,8 @@ export function renderProp(
     : isEnum
       ? field.type
       : 'unknown';
-  return `${decorator}(${meta})\n${field.name}: ${field.isList ? `${tsType}[]` : tsType}`;
+  return [
+    `  @${decorator}(${meta})`,
+    `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType}`,
+  ].join('\n');
 }
