@@ -111,7 +111,6 @@ generator dto {
   output           = "./generated/dto"
   emitRelations    = true
   emitUpdateReadonly = false
-  fileMaxLines     = 100
   dtoKinds         = ["base", "create", "update"]
 }
 ```
@@ -121,7 +120,6 @@ generator dto {
 - `output`: DTO 文件的输出目录（默认：`./generated/dto`）
 - `emitRelations`: 是否生成关联模型的 DTO（默认：`false`）
 - `emitUpdateReadonly`: 是否在更新 DTO 中包含只读字段（默认：`false`）
-- `fileMaxLines`: 单个 DTO 文件的最大行数（默认：`100`）
 - `dtoKinds`: 要生成的 DTO 类型数组（默认：`["base", "create", "update"]`）
 
 ### 3. 运行生成

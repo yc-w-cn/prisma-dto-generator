@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 
-import { splitByLines, writeTextFile } from '@/utils/fs';
+import { writeTextFile } from '@/utils/fs';
 import { toKebabCase, toPascalCase } from '@/utils/naming';
 
 import type { GeneratorConfig } from '@/core/config';
@@ -33,14 +33,5 @@ export async function emitAll(ctx: Ctx) {
 }
 
 function emitOne(ctx: Ctx, content: string, fileName: string) {
-  const chunks = splitByLines(content, ctx.config.fileMaxLines);
-  if (chunks.length === 1) {
-    writeTextFile(join(ctx.outputDir, fileName), chunks[0]);
-    return;
-  }
-  for (let i = 0; i < chunks.length; i++) {
-    const suffix = i === 0 ? '' : `.part-${i + 1}`;
-    const name = fileName.replace(/\.ts$/, `${suffix}.ts`);
-    writeTextFile(join(ctx.outputDir, name), chunks[i]);
-  }
+  writeTextFile(join(ctx.outputDir, fileName), content);
 }

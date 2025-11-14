@@ -13,7 +13,6 @@ export async function onGenerate() {
     emitRelations: false,
     emitUpdateReadonly: false,
     swaggerLibrary: 'nestjs',
-    fileMaxLines: 100,
     dtoKinds: ['base', 'create', 'update'],
   };
   const models: ModelDescriptor[] = [

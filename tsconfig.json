@@ -1,9 +1,4 @@
 {
-  "references": [
-    {
-      "path": "./tests/tsconfig.test.json"
-    }
-  ],
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
@@ -21,10 +16,10 @@
     }
   },
   "include": [
-    "src"
+    "src",
+    "tests"
   ],
   "exclude": [
-    "node_modules",
-    "tests"
+    "node_modules"
   ]
 }

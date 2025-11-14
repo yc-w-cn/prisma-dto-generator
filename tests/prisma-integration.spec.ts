@@ -179,7 +179,6 @@ enum UserRole {
       emitRelations: true,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
-      fileMaxLines: 100,
       dtoKinds: ['base', 'create', 'update'] as const,
     };
 
@@ -368,7 +367,6 @@ enum UserRole {
       emitRelations: true,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
-      fileMaxLines: 100,
       dtoKinds: ['base', 'create', 'update'] as const,
     };
 

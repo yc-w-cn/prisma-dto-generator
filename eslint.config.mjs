@@ -38,8 +38,8 @@ export default defineConfig(
           allowDefaultProject: [
             '*.js',
             '*.mjs',
+            'eslint.config.mjs',
             'jest.config.ts',
-            'tsup.config.ts',
           ],
         },
         tsconfigRootDir: import.meta.dirname,

@@ -28,17 +28,17 @@ const cfg: GeneratorConfig = {
   emitRelations: false,
   emitUpdateReadonly: false,
   swaggerLibrary: 'nestjs',
-  fileMaxLines: 50,
   dtoKinds: ['base'],
 };
 
 describe('emitter', () => {
-  test('splits long files', async () => {
+  test('generates DTO files', async () => {
     const dir = tmp();
     cfg.output = dir;
     await emitAll({ outputDir: dir, models: [model], config: cfg });
     const content = readFileSync(join(dir, 'post.dto.ts'), 'utf8');
-    expect(content.split('\n').length).toBeLessThanOrEqual(50);
+    expect(content).toContain('export class PostDto');
+    expect(content).toContain('ApiProperty');
     rmSync(dir, { recursive: true, force: true });
   });
 });
