@@ -5,6 +5,6 @@
     "noEmit": false,
     "rootDir": ".."
   },
-  "include": [".", "../src"],
+  "include": ["."],
   "exclude": []
 }
