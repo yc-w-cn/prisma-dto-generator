@@ -121,7 +121,7 @@ generator client {
 generator dto {
   provider = "prisma-dto-generator"
   output           = "../src/generated/prisma-class"
-  prismaClientPath = "../src/generated/prisma-client"  # 确保枚举导入路径正确
+  prismaClientPath = "@/generated/prisma-client"  # 确保枚举导入路径正确
   emitUpdateReadonly = false
 }
 ```
@@ -175,7 +175,7 @@ generator client {
 generator dto {
   provider = "prisma-dto-generator"
   output           = "../src/generated/prisma-class"
-  prismaClientPath = "../src/generated/prisma-client"  # 正确设置
+  prismaClientPath = "@/generated/prisma-client"  # 正确设置
 }
 ```
 
