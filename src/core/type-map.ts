@@ -18,26 +18,30 @@ export type SwaggerMeta = {
 };
 
 export function toTsType(scalar: Scalar, nullable: boolean): string {
-  const base =
-    scalar === 'String'
-      ? 'string'
-      : scalar === 'Int'
-        ? 'number'
-        : scalar === 'BigInt'
-          ? 'string'
-          : scalar === 'Float'
-            ? 'number'
-            : scalar === 'Decimal'
-              ? 'number'
-              : scalar === 'Boolean'
-                ? 'boolean'
-                : scalar === 'DateTime'
-                  ? 'string'
-                  : scalar === 'Json'
-                    ? 'Record<string, any>'
-                    : scalar === 'Bytes'
-                      ? 'string'
-                      : 'any';
+  let base: string;
+
+  switch (scalar) {
+    case 'String':
+    case 'DateTime':
+    case 'Bytes':
+    case 'BigInt':
+      base = 'string';
+      break;
+    case 'Int':
+    case 'Float':
+    case 'Decimal':
+      base = 'number';
+      break;
+    case 'Boolean':
+      base = 'boolean';
+      break;
+    case 'Json':
+      base = 'Record<string, any>';
+      break;
+    default:
+      base = 'any';
+  }
+
   return nullable ? `${base} | null` : base;
 }
 
@@ -45,28 +49,48 @@ export function toSwaggerMeta(
   scalar: Scalar,
   opts: { isArray?: boolean; nullable?: boolean },
 ): SwaggerMeta {
-  const format =
-    scalar === 'Int'
-      ? 'int32'
-      : scalar === 'BigInt'
-        ? 'int64'
-        : scalar === 'Float' || scalar === 'Decimal'
-          ? 'double'
-          : scalar === 'DateTime'
-            ? 'date-time'
-            : scalar === 'Bytes'
-              ? 'byte'
-              : undefined;
-  const typeRef =
-    scalar === 'Boolean'
-      ? 'Boolean'
-      : scalar === 'Json'
-        ? 'Object'
-        : scalar === 'DateTime'
-          ? 'String'
-          : scalar === 'Int' || scalar === 'Float' || scalar === 'Decimal'
-            ? 'Number'
-            : 'String';
+  let format: string | undefined;
+  switch (scalar) {
+    case 'Int':
+      format = 'int32';
+      break;
+    case 'BigInt':
+      format = 'int64';
+      break;
+    case 'Float':
+    case 'Decimal':
+      format = 'double';
+      break;
+    case 'DateTime':
+      format = 'date-time';
+      break;
+    case 'Bytes':
+      format = 'byte';
+      break;
+    default:
+      format = undefined;
+  }
+
+  let typeRef: string;
+  switch (scalar) {
+    case 'Boolean':
+      typeRef = 'Boolean';
+      break;
+    case 'Json':
+      typeRef = 'Object';
+      break;
+    case 'DateTime':
+      typeRef = 'String';
+      break;
+    case 'Int':
+    case 'Float':
+    case 'Decimal':
+      typeRef = 'Number';
+      break;
+    default:
+      typeRef = 'String';
+  }
+
   return {
     typeRef,
     format,
