@@ -80,7 +80,7 @@ export function renderProp(
     ? toTsType(field.type as any, false)
     : isEnum
       ? field.type
-      : 'unknown';
+      : '';
   return [
     `@${decorator}(${meta})`,
     `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType};`,

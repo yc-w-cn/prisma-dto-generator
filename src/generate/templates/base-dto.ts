@@ -9,7 +9,9 @@ export function renderBaseDto(
   const imports = renderImports(model, false, prismaClientPath);
   const header = renderJSDoc(`${className}Dto`, '自动生成的基础 DTO');
   const props = model.fields
-    .map((f) => `  ${renderProp(f, false)}`)
+    .map((f) => renderProp(f, false))
+    .filter((prop) => prop.trim() !== '') // 过滤掉空字符串的字段
+    .map((prop) => `  ${prop}`)
     .join('\n\n');
   return `${imports}\n${header}export class ${className}Dto {\n${props ? props + '\n' : ''}}\n`;
 }
