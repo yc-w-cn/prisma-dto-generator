@@ -35,7 +35,12 @@ export default defineConfig(
       parserOptions: {
         projectService: {
           // 为了支持 projectService，需要把文件加入在这里
-          allowDefaultProject: ['*.js', '*.mjs'],
+          allowDefaultProject: [
+            '*.js',
+            '*.mjs',
+            'jest.config.ts',
+            'tsup.config.ts',
+          ],
         },
         tsconfigRootDir: import.meta.dirname,
       },
