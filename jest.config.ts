@@ -7,6 +7,10 @@ const config: Config = {
   },
   testMatch: ['**/tests/**/*.spec.ts'],
   moduleFileExtensions: ['ts', 'js'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  preset: undefined,
 };
 
 export default config;
