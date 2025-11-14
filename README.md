@@ -1,6 +1,6 @@
 # Prisma DTO Generator (Swagger)
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-prisma--dto--generator-blue.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-@yc--w--cn/prisma--dto--generator-blue.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-Wang%20Yuchen-orange.svg)](mailto:contact@wangyuchen.cn)
 
@@ -33,6 +33,21 @@ generator client {
 ```
 
 ## 安装
+
+### 1. 安装包
+
+```bash
+# 使用 pnpm (推荐)
+pnpm add -D @yc-w-cn/prisma-dto-generator
+
+# 使用 npm
+npm install -D @yc-w-cn/prisma-dto-generator
+
+# 使用 yarn
+yarn add -D @yc-w-cn/prisma-dto-generator
+```
+
+### 2. 安装 Prisma Client
 
 ```bash
 # 使用 pnpm (推荐)
@@ -89,7 +104,7 @@ model Post {
 
 ```prisma
 generator dto_generator {
-  provider = "prisma-dto-generator"
+  provider = "@yc-w-cn/prisma-dto-generator"
   output           = "./generated/dto"
   emitRelations    = true
   emitUpdateReadonly = false
