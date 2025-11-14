@@ -17,7 +17,7 @@ const builtinModules = module.builtinModules.filter(
   (mod) => mod !== 'constants',
 );
 
-export default defindConfig(
+export default defineConfig(
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   tseslint.configs.recommendedTypeChecked,
