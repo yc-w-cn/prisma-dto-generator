@@ -6,6 +6,7 @@ export type FieldDescriptor = {
   type: string;
   isList: boolean;
   isRequired: boolean;
+  relationName?: string;
 };
 
 export type ModelDescriptor = {
@@ -24,6 +25,7 @@ export function toModelDescriptors(doc: DMMF.Document): ModelDescriptor[] {
       type: f.type,
       isList: f.isList,
       isRequired: f.isRequired,
+      relationName: f.relationName,
     })),
     enums: Array.from(enums),
   }));
