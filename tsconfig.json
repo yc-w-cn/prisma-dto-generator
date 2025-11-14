@@ -5,10 +5,15 @@
     "moduleResolution": "bundler",
     "declaration": true,
     "outDir": "dist",
-    "rootDir": "src",
+    "baseUrl": "./",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    }
   },
   "include": ["src", "eslint.config.mjs"],
   "exclude": ["node_modules", "dist", "tests"]
