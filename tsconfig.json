@@ -1,4 +1,9 @@
 {
+  "references": [
+    {
+      "path": "./tests/tsconfig.test.json"
+    }
+  ],
   "compilerOptions": {
     "target": "ES2022",
     "module": "ES2022",
@@ -12,9 +17,17 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
+      ]
     }
   },
-  "include": ["src", "eslint.config.mjs"],
-  "exclude": ["node_modules", "dist", "tests"]
+  "include": [
+    "src",
+    "eslint.config.mjs",
+    "jest.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests"
+  ]
 }
