@@ -8,7 +8,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "@yc-w-cn/prisma-dto-generator": "dist/index.js"
+    "prisma-dto-generator": "dist/index.js"
   },
   "files": [
     "dist"
