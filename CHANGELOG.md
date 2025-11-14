@@ -2,6 +2,11 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.1.3] - 2025-11-15
+
+### 新增 (Added)
+- 添加全局变量 `__APP_VERSION__` 用于在编译时获取应用版本号
+
 ## [v0.1.2] - 2025-11-15
 
 ### 变更 (Changed)
