@@ -45,7 +45,19 @@ export function emitAll(
 
   // 生成 index.ts 导出文件
   if (exportStatements.length > 0) {
-    emitOne(ctx, exportStatements.join('\n'), 'index.ts');
+    const sortedExportStatements = exportStatements.sort((a, b) => {
+      const classNameA = /export\s+\{\s*(\w+)\s*\}/.exec(a)?.[1] ?? '';
+      const classNameB = /export\s+\{\s*(\w+)\s*\}/.exec(b)?.[1] ?? '';
+
+      // 比较时去掉 Dto
+      const nameA = classNameA.replace(/Dto$/, '');
+      const nameB = classNameB.replace(/Dto$/, '');
+
+      return nameA.localeCompare(nameB, 'en', { sensitivity: 'base' });
+    });
+
+    const indexContent = sortedExportStatements.join('\n') + '\n';
+    emitOne(ctx, indexContent, 'index.ts');
   }
 }
 
