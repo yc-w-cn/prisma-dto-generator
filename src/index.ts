@@ -14,8 +14,9 @@ generatorHandler({
   },
   async onGenerate(options: GeneratorOptions) {
     // options 的范例文件参考: docs/generated-config.json
+    const output = options.generator.output?.value || './generated/dto';
     const cfg = parseConfig(options.generator.config, options.schemaPath);
     const models = toModelDescriptors(options.dmmf);
-    emitAll(cfg, models, options.schemaPath, cfg.output);
+    emitAll(cfg, models, options.schemaPath, output);
   },
 });

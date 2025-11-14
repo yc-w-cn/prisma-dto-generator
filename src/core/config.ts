@@ -17,6 +17,8 @@ export function parseConfig(
   const pickStrOpt = (v: unknown) =>
     typeof v === 'string' && v.length ? v : undefined;
 
+  console.log('input.output', input.output);
+
   // 解析 output 配置，处理相对路径
   let output = pickStr(input.output, './generated/dto');
 
