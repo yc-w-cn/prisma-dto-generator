@@ -37,7 +37,7 @@ export function renderProp(
       ? field.type
       : 'unknown';
   return [
-    `  @${decorator}(${meta})`,
-    `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType}`,
+    `@${decorator}(${meta})`,
+    `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType};`,
   ].join('\n');
 }

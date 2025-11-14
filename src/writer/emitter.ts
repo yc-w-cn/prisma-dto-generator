@@ -16,19 +16,42 @@ type Ctx = {
 };
 
 export async function emitAll(ctx: Ctx) {
+  const exportStatements: string[] = [];
+
   for (const m of ctx.models) {
     const baseName = toKebabCase(m.name);
     const className = toPascalCase(m.name);
-    if (ctx.config.dtoKinds.includes('base'))
+
+    if (ctx.config.dtoKinds.includes('base')) {
       emitOne(ctx, renderBaseDto(m, className), `${baseName}.dto.ts`);
-    if (ctx.config.dtoKinds.includes('create'))
+      exportStatements.push(
+        `export { ${className}Dto } from './${baseName}.dto';`,
+      );
+    }
+
+    if (ctx.config.dtoKinds.includes('create')) {
       emitOne(ctx, renderCreateDto(m, className), `create-${baseName}.dto.ts`);
-    if (ctx.config.dtoKinds.includes('update'))
+      exportStatements.push(
+        `export { Create${className}Dto } from './create-${baseName}.dto';`,
+      );
+    }
+
+    if (ctx.config.dtoKinds.includes('update')) {
       emitOne(
         ctx,
         renderUpdateDto(m, className, ctx.config),
         `update-${baseName}.dto.ts`,
       );
+      exportStatements.push(
+        `export { Update${className}Dto } from './update-${baseName}.dto';`,
+      );
+    }
+  }
+
+  // 生成 index.ts 文件导出所有 DTO
+  if (exportStatements.length > 0) {
+    const indexContent = exportStatements.join('\n') + '\n';
+    emitOne(ctx, indexContent, 'index.ts');
   }
 }
 
