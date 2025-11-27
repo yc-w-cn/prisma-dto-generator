@@ -2,6 +2,11 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.2.2] - 2025-11-27
+
+### 变更 (Changed)
+- **升级依赖版本**：升级 `@prisma/generator-helper` 到 `^7.0.1`，`@prisma/internals` 到 `^7.0.1`，确保与最新 Prisma 版本兼容
+
 ## [v0.2.1] - 2025-11-15
 
 ### 变更 (Changed)
