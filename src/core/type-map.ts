@@ -22,10 +22,12 @@ export function toTsType(scalar: Scalar, nullable: boolean): string {
 
   switch (scalar) {
     case 'String':
-    case 'DateTime':
     case 'Bytes':
     case 'BigInt':
       base = 'string';
+      break;
+    case 'DateTime':
+      base = 'Date';
       break;
     case 'Int':
     case 'Float':
@@ -80,7 +82,7 @@ export function toSwaggerMeta(
       typeRef = 'Object';
       break;
     case 'DateTime':
-      typeRef = 'String';
+      typeRef = 'Date';
       break;
     case 'Int':
     case 'Float':
