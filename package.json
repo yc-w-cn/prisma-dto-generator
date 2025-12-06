@@ -23,8 +23,7 @@
     "schema"
   ],
   "repository": {
-    "type": "git",
-    "url": "https://github.com/yc-w-cn/prisma-dto-generator"
+    "url": "git+https://github.com/yc-w-cn/prisma-dto-generator.git"
   },
   "bugs": {
     "url": "https://github.com/yc-w-cn/prisma-dto-generator/issues"
