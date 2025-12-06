@@ -1,6 +1,6 @@
 {
   "name": "@yc-w-cn/prisma-dto-generator",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "专为 Prisma Schema 设计的 DTO 生成器，专注于为 Swagger/OpenAPI 文档提供类型安全的 DTO 类",
   "author": "Wang Yuchen <contact@wangyuchen.cn>",
   "license": "MIT",
@@ -36,14 +36,14 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@prisma/generator-helper": "^7.0.1"
+    "@prisma/generator-helper": "^7.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@prisma/internals": "^7.0.1",
+    "@prisma/internals": "^7.1.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
-    "@typescript-eslint/parser": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -51,12 +51,12 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^16.5.0",
     "jest": "^30.2.0",
-    "prettier": "^3.7.0",
-    "ts-jest": "^29.4.5",
+    "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
     "tsc-alias": "^1.8.16",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.0"
+    "typescript-eslint": "^8.48.1"
   },
-  "packageManager": "pnpm@10.23.0"
+  "packageManager": "pnpm@10.24.0"
 }

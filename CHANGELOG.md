@@ -2,6 +2,11 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.2.3] - 2025-12-06
+
+- **修复DTO字段类型**：修复了生成DTO时，可选字段的类型错误问题，现在会正确生成 `| null` 类型
+- **升级依赖版本**：升级 `@prisma/generator-helper` 到 `^7.1.0`，`@prisma/internals` 到 `^7.1.0`，确保与最新 Prisma 版本兼容
+
 ## [v0.2.2] - 2025-11-27
 
 ### 变更 (Changed)
