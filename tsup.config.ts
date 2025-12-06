@@ -7,6 +7,8 @@ const pkg = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'),
 );
 
+console.log('当前构建版本：', pkg.version);
+
 export default defineConfig({
   entry: ['src/index.ts'],
   outDir: 'dist',
