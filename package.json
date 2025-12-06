@@ -33,7 +33,8 @@
   "scripts": {
     "build": "tsup",
     "test": "jest",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "publish": "npm publish --access public"
   },
   "dependencies": {
     "@prisma/generator-helper": "^7.1.0"
