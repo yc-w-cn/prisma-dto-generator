@@ -83,6 +83,6 @@ export function renderProp(
       : 'unknown';
   return [
     `@${decorator}(${meta})`,
-    `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType};`,
+    `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType}${field.isRequired ? '' : ' | null'}`,
   ].join('\n');
 }
