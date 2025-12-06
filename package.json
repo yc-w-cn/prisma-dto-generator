@@ -33,6 +33,8 @@
     "build": "tsup",
     "test": "jest",
     "clean": "rm -rf dist",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run clean && npm run build && npm run test",
     "publish": "npm publish --access public"
   },
   "dependencies": {
