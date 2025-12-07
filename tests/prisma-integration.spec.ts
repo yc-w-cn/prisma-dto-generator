@@ -178,6 +178,7 @@ enum UserRole {
       output: outputDir,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
+      useDateType: true,
     };
 
     // 生成 DTO
@@ -359,6 +360,7 @@ enum UserRole {
       output: outputDir,
       emitUpdateReadonly: false,
       swaggerLibrary: 'nestjs' as const,
+      useDateType: true,
     };
     // 生成 DTO
     emitAll(config, models, '/path/to/schema.prisma', outputDir);

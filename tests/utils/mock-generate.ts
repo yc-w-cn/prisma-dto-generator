@@ -12,6 +12,7 @@ export async function onGenerate() {
     output: dir,
     emitUpdateReadonly: false,
     swaggerLibrary: 'nestjs',
+    useDateType: true,
   };
   const models: ModelDescriptor[] = [
     {

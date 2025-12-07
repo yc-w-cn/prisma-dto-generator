@@ -82,6 +82,7 @@ const baseConfig: GeneratorConfig = {
   output: '',
   emitUpdateReadonly: false,
   swaggerLibrary: 'nestjs',
+  useDateType: true,
 };
 
 describe('发射器', () => {

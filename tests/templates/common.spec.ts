@@ -60,9 +60,11 @@ describe('模板渲染公共函数', () => {
         relationName: undefined,
       };
 
-      const result = renderProp(field, false);
+      const result = renderProp(field, false, false);
       expect(result).toBe(
-        `@ApiPropertyOptional({ type: String })\n  description: string | null`,
+        `@ApiPropertyOptional({ type: String })
+@IsOptional()
+  description: string | null`,
       );
     });
 
@@ -76,9 +78,11 @@ describe('模板渲染公共函数', () => {
         relationName: undefined,
       };
 
-      const result = renderProp(field, false);
+      const result = renderProp(field, false, false);
       expect(result).toBe(
-        `@ApiPropertyOptional({ type: [String], isArray: true })\n  tags: string[] | null`,
+        `@ApiPropertyOptional({ type: [String], isArray: true })
+@IsOptional()
+  tags: string[] | null`,
       );
     });
 
@@ -108,9 +112,11 @@ describe('模板渲染公共函数', () => {
         relationName: 'UserPosts',
       };
 
-      const result = renderProp(field, false);
+      const result = renderProp(field, false, false);
       expect(result).toBe(
-        `@ApiPropertyOptional({ type: Object })\n  user: unknown | null`,
+        `@ApiPropertyOptional({ type: Object })
+@IsOptional()
+  user: unknown | null`,
       );
     });
 
@@ -124,13 +130,15 @@ describe('模板渲染公共函数', () => {
         relationName: undefined,
       };
 
-      const result = renderProp(field, true);
+      const result = renderProp(field, true, false);
       expect(result).toBe(
-        `@ApiPropertyOptional({ type: Number, format: 'int32' })\n  id: number`,
+        `@ApiPropertyOptional({ type: Number, format: 'int32' })
+@IsOptional()
+  id: number`,
       );
     });
 
-    test('应该渲染带有特殊格式的类型', () => {
+    test('应该渲染带有特殊格式的类型 (useDateType: true)', () => {
       const field: FieldDescriptor = {
         name: 'createdAt',
         kind: 'scalar',
@@ -140,9 +148,30 @@ describe('模板渲染公共函数', () => {
         relationName: undefined,
       };
 
-      const result = renderProp(field, false);
+      const result = renderProp(field, false, true);
       expect(result).toBe(
-        `@ApiProperty({ type: Date, format: 'date-time' })\n  createdAt: Date`,
+        `@ApiProperty({ type: Date, format: 'date-time' })
+@Type(() => Date)
+@IsDate()
+  createdAt: Date`,
+      );
+    });
+
+    test('应该渲染带有特殊格式的类型 (useDateType: false)', () => {
+      const field: FieldDescriptor = {
+        name: 'createdAt',
+        kind: 'scalar',
+        type: 'DateTime',
+        isList: false,
+        isRequired: true,
+        relationName: undefined,
+      };
+
+      const result = renderProp(field, false, false);
+      expect(result).toBe(
+        `@ApiProperty({ type: String, format: 'date-time' })
+@IsDateString()
+  createdAt: string`,
       );
     });
   });
@@ -200,9 +229,9 @@ describe('模板渲染公共函数', () => {
         enums: [],
       };
 
-      const result = renderImports(model, false);
+      const result = renderImports(model, false, undefined, false);
       expect(result).toBe(
-        `import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';\n`,
+        `import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';\n\nimport { IsOptional } from 'class-validator';\n`,
       );
     });
 
@@ -268,9 +297,9 @@ describe('模板渲染公共函数', () => {
         enums: ['UserRole', 'UserStatus'],
       };
 
-      const result = renderImports(model, false);
+      const result = renderImports(model, false, undefined, false);
       expect(result).toBe(
-        `import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';\n\nimport { UserRole, UserStatus } from '@/generated/prisma-client/enums';\n`,
+        `import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';\n\nimport { IsOptional } from 'class-validator';\n\nimport { UserRole, UserStatus } from '@/generated/prisma-client/enums';\n`,
       );
     });
 
@@ -312,9 +341,9 @@ describe('模板渲染公共函数', () => {
         enums: [],
       };
 
-      const result = renderImports(model, true);
+      const result = renderImports(model, true, undefined, false);
       expect(result).toBe(
-        `import { ApiPropertyOptional } from '@nestjs/swagger';\n`,
+        `import { ApiPropertyOptional } from '@nestjs/swagger';\n\nimport { IsOptional } from 'class-validator';\n`,
       );
     });
 
