@@ -1,9 +1,13 @@
 # Prisma DTO Generator (Swagger)
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-@yc--w--cn/prisma--dto--generator-blue.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
+[![npm version](https://img.shields.io/npm/v/@yc-w-cn/prisma-dto-generator.svg)](https://www.npmjs.com/package/@yc-w-cn/prisma-dto-generator)
+[![npm downloads](https://img.shields.io/npm/dm/@yc-w-cn/prisma-dto-generator.svg)](https://www.npmjs.com/package/@yc-w-cn/prisma-dto-generator)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-Wang%20Yuchen-orange.svg)](mailto:contact@wangyuchen.cn)
-[![Version](https://img.shields.io/badge/Version-v0.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.3.1-blue.svg)](CHANGELOG.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
 
 [📝 查看更新日志](CHANGELOG.md) • [🐛 报告问题](https://github.com/yc-w-cn/prisma-dto-generator/issues) • [📦 npm 包](https://www.npmjs.com/package/@yc-w-cn/prisma-dto-generator)
 
