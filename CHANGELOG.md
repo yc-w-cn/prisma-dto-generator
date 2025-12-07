@@ -2,6 +2,22 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.3.0] - 2025-12-07
+
+### 新增 (Added)
+- **Date类型配置选项**：添加 `useDateType` 配置选项，支持控制DateTime字段生成Date或string类型（默认：`true`）
+- **装饰器支持**：为DTO字段自动生成 `class-validator` 和 `class-transformer` 装饰器
+- **单元测试覆盖**：添加完整的单元测试，确保功能正确性
+
+### 变更 (Changed)
+- **优化类型映射**：根据 `useDateType` 配置，DateTime字段可生成Date类型或string类型
+- **改进装饰器生成**：根据字段类型自动生成相应的验证装饰器
+- **增强导入管理**：动态导入所需的装饰器，避免不必要的依赖
+
+### 修复 (Fixed)
+- **修复Date类型转换**：解决DateTime字段被错误转换为string类型的问题
+- **优化可选字段处理**：为可选字段正确添加 `@IsOptional()` 装饰器
+
 ## [v0.2.3] - 2025-12-06
 
 - **修复DTO字段类型**：修复了生成DTO时，可选字段的类型错误问题，现在会正确生成 `| null` 类型

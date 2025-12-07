@@ -131,6 +131,9 @@ generator dto {
 - `output`: DTO 文件的输出目录（默认：`./generated/dto`）
 - `prismaClientPath`: Prisma Client 的输出目录路径，用于正确计算枚举导入的相对路径（可选，默认使用 `../src/generated/prisma-client`）
 - `emitUpdateReadonly`: 是否在更新 DTO 中包含只读字段（默认：`false`）
+- `useDateType`: 是否将 DateTime 字段生成为 Date 类型（默认：`true`）
+  - `true`: 生成 `Date` 类型，需要配合 `class-transformer` 和全局管道使用
+  - `false`: 生成 `string` 类型，使用 `@IsDateString()` 验证
 
 ### 3. 运行生成
 
@@ -195,28 +198,80 @@ generator dto {
 
 基于上面的 User 和 Post 模型，生成器会为每个模型生成基础 DTO 文件：
 
-### UserDto.ts
+### UserDto.ts (useDateType: true)
 ```typescript
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsDate, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+
 export class UserDto {
+  @ApiProperty({ type: Number })
   id: number;
+
+  @ApiProperty({ type: String })
   email: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
   name?: string;
+
+  @ApiProperty({ type: Date, format: 'date-time' })
+  @Type(() => Date)
+  @IsDate()
   createdAt: Date;
+
+  @ApiProperty({ type: Date, format: 'date-time' })
+  @Type(() => Date)
+  @IsDate()
   updatedAt: Date;
 }
 ```
 
-### PostDto.ts
+### UserDto.ts (useDateType: false)
 ```typescript
-export class PostDto {
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsDateString, IsOptional } from 'class-validator';
+
+export class UserDto {
+  @ApiProperty({ type: Number })
   id: number;
-  title: string;
-  content?: string;
-  published: boolean;
-  authorId: number;
-  createdAt: Date;
-  updatedAt: Date;
+
+  @ApiProperty({ type: String })
+  email: string;
+
+  @ApiPropertyOptional({ type: String })
+  @IsOptional()
+  name?: string;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  @IsDateString()
+  createdAt: string;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  @IsDateString()
+  updatedAt: string;
 }
+```
+
+## 全局管道配置
+
+当 `useDateType: true` 时，需要在 NestJS 应用中配置全局管道，启用类型转换：
+
+```typescript
+import { ValidationPipe } from '@nestjs/common';
+
+/** 
+ * 全局管道: 验证和转换 DTO 
+ */
+app.useGlobalPipes(
+  new ValidationPipe({
+    transform: true, // <--- 必须开启！开启后 DTO 会根据类型自动转换
+    transformOptions: {
+      enableImplicitConversion: false, // 建议设为 false，显式使用 @Type 更安全
+    },
+    whitelist: true, // 自动剔除 DTO 中未定义的属性
+  }),
+);
 ```
 
 ## 最佳实践
