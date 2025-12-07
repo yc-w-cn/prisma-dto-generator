@@ -1,25 +1,32 @@
 import { toSwaggerMeta, toTsType } from '@/core/type-map';
 
 describe('类型映射', () => {
-  describe('标量类型转TypeScript类型', () => {
-    // 测试所有标量类型
-    test('应该正确转换所有标量类型', () => {
+  describe('toTsType', () => {
+    it('应该将标量类型转换为TypeScript类型', () => {
       expect(toTsType('String', false)).toBe('string');
       expect(toTsType('Int', false)).toBe('number');
-      expect(toTsType('BigInt', false)).toBe('string');
       expect(toTsType('Float', false)).toBe('number');
-      expect(toTsType('Decimal', false)).toBe('number');
       expect(toTsType('Boolean', false)).toBe('boolean');
       expect(toTsType('DateTime', false)).toBe('Date');
+      expect(toTsType('DateTime', false, false)).toBe('string');
       expect(toTsType('Json', false)).toBe('Record<string, any>');
       expect(toTsType('Bytes', false)).toBe('string');
+      expect(toTsType('BigInt', false)).toBe('string');
+      expect(toTsType('Decimal', false)).toBe('number');
     });
 
-    // 测试可空性
-    test('应该正确处理可空类型', () => {
+    it('应该处理可空类型', () => {
       expect(toTsType('String', true)).toBe('string | null');
       expect(toTsType('Int', true)).toBe('number | null');
       expect(toTsType('Boolean', true)).toBe('boolean | null');
+    });
+
+    it('应该处理未知标量类型（第48行default分支）', () => {
+      // 测试未知标量类型，应该回退到'any'类型
+      // 使用类型断言绕过TypeScript的类型检查来测试default分支
+      const invalidScalar = 'InvalidScalar' as any;
+      expect(toTsType(invalidScalar, false)).toBe('any');
+      expect(toTsType(invalidScalar, true)).toBe('any | null');
     });
 
     // 测试 useDateType: false 的情况

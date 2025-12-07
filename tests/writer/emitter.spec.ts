@@ -372,15 +372,16 @@ describe('发射器', () => {
   });
 
   test('应该处理正则表达式匹配失败的情况（第54-55行分支覆盖率）', async () => {
-    // 直接测试排序函数中的正则匹配逻辑
-    const exportStatements = [
-      "export { UserDto } from './user.dto';",
-      "export { invalid export statement } from './invalid.dto';", // 不符合正则模式的语句
-      "export { PostDto } from './post.dto';",
+    // 创建包含无效导出语句的数组
+    const invalidExportStatements = [
+      'export { UserDto } from "./user.dto";', // 有效语句
+      'export {  } from "./empty.dto";', // 无效语句 - 缺少类名
+      'export { PostDto } from "./post.dto";', // 有效语句
+      'export from "./invalid.dto";', // 无效语句 - 缺少大括号
     ];
 
     // 复制emitter.ts中的排序逻辑
-    const sortedExportStatements = exportStatements.sort((a, b) => {
+    const sortedExportStatements = invalidExportStatements.sort((a, b) => {
       const classNameA = /export\s+\{\s*(\w+)\s*\}/.exec(a)?.[1] ?? '';
       const classNameB = /export\s+\{\s*(\w+)\s*\}/.exec(b)?.[1] ?? '';
 
@@ -391,17 +392,85 @@ describe('发射器', () => {
       return nameA.localeCompare(nameB, 'en', { sensitivity: 'base' });
     });
 
-    // 验证正则匹配失败的情况
-    const invalidStatement = sortedExportStatements[0];
-    expect(invalidStatement).toBe(
-      "export { invalid export statement } from './invalid.dto';",
-    );
-
-    // 验证正则匹配失败时，类名为空字符串，排在前面
-    const validStatements = sortedExportStatements.slice(1);
-    expect(validStatements).toEqual([
-      "export { PostDto } from './post.dto';",
-      "export { UserDto } from './user.dto';",
+    // 验证排序结果
+    expect(sortedExportStatements).toEqual([
+      'export {  } from "./empty.dto";', // 空类名应该排在最前面
+      'export from "./invalid.dto";', // 无效语句应该排在前面
+      'export { PostDto } from "./post.dto";', // 有效语句按字母顺序
+      'export { UserDto } from "./user.dto";', // 有效语句按字母顺序
     ]);
+  });
+
+  test('应该处理各种边界情况的正则匹配（第54-55行分支覆盖率）', async () => {
+    // 测试各种边界情况的导出语句
+    const edgeCaseStatements = [
+      'export { UserDto } from "./user.dto";', // 正常情况
+      'export {  } from "./empty.dto";', // 空类名
+      'export { Post_Dto123 } from "./post.dto";', // 包含下划线和数字
+      'export from "./no-braces.dto";', // 没有大括号
+      'export { } from "./space-only.dto";', // 只有空格
+      'export {\n  MultiLineDto\n} from "./multiline.dto";', // 多行格式
+    ];
+
+    // 测试每个语句的正则匹配结果
+    const matchResults = edgeCaseStatements.map((statement) => {
+      const match = /export\s+\{\s*(\w+)\s*\}/.exec(statement);
+      return {
+        statement,
+        className: match?.[1] ?? '(empty)',
+        matched: match !== null,
+      };
+    });
+
+    // 验证匹配结果
+    expect(matchResults).toEqual([
+      {
+        statement: 'export { UserDto } from "./user.dto";',
+        className: 'UserDto',
+        matched: true,
+      },
+      {
+        statement: 'export {  } from "./empty.dto";',
+        className: '(empty)',
+        matched: false,
+      },
+      {
+        statement: 'export { Post_Dto123 } from "./post.dto";',
+        className: 'Post_Dto123',
+        matched: true,
+      },
+      {
+        statement: 'export from "./no-braces.dto";',
+        className: '(empty)',
+        matched: false,
+      },
+      {
+        statement: 'export { } from "./space-only.dto";',
+        className: '(empty)',
+        matched: false,
+      },
+      {
+        statement: 'export {\n  MultiLineDto\n} from "./multiline.dto";',
+        className: 'MultiLineDto',
+        matched: true,
+      },
+    ]);
+
+    // 测试排序逻辑
+    const sorted = edgeCaseStatements.sort((a, b) => {
+      const classNameA = /export\s+\{\s*(\w+)\s*\}/.exec(a)?.[1] ?? '';
+      const classNameB = /export\s+\{\s*(\w+)\s*\}/.exec(b)?.[1] ?? '';
+
+      const nameA = classNameA.replace(/Dto$/, '');
+      const nameB = classNameB.replace(/Dto$/, '');
+
+      return nameA.localeCompare(nameB, 'en', { sensitivity: 'base' });
+    });
+
+    // 验证排序：未匹配的应该排在前面，然后按字母顺序
+    expect(sorted[0]).toContain('export {  }'); // 空类名
+    expect(sorted[1]).toContain('export from "./no-braces.dto"'); // 无大括号
+    expect(sorted[2]).toContain('export { }'); // 只有空格
+    // 后面的应该是有匹配的语句
   });
 });

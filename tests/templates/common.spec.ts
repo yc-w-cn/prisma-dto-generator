@@ -231,6 +231,23 @@ describe('模板渲染公共函数', () => {
       expect(result).toBe(`@ApiProperty({ type: Object })\n  user: unknown`);
     });
 
+    test('应该处理可空对象类型属性（第119行分支覆盖率）', () => {
+      const field: FieldDescriptor = {
+        name: 'metadata',
+        kind: 'object',
+        type: 'JsonObject',
+        isList: false,
+        isRequired: false,
+        relationName: undefined,
+      };
+
+      const result = renderProp(field, false, false);
+
+      expect(result).toBe(
+        `@ApiPropertyOptional({ type: Object })\n  @IsOptional()\n  metadata: unknown | null`,
+      );
+    });
+
     test('应该处理optionalMode为true时的对象类型属性（第17行未覆盖代码）', () => {
       const field: FieldDescriptor = {
         name: 'user',
