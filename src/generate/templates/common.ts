@@ -44,22 +44,30 @@ export function renderImports(
   // 生成导入语句
   const importStatements: string[] = [];
 
-  // 添加 @nestjs/swagger 导入
+  // 添加 @nestjs/swagger 导入（官方包）
   if (usedSwaggerDecorators.size > 0) {
     const decorators = Array.from(usedSwaggerDecorators).join(', ');
     importStatements.push(`import { ${decorators} } from '@nestjs/swagger';`);
   }
 
-  // 添加 class-validator 导入
+  // 添加第三方包导入（class-validator 和 class-transformer 放在一起）
+  const thirdPartyImports: string[] = [];
+
   if (usedValidatorDecorators.size > 0) {
     const decorators = Array.from(usedValidatorDecorators).join(', ');
-    importStatements.push(`import { ${decorators} } from 'class-validator';`);
+    thirdPartyImports.push(`import { ${decorators} } from 'class-validator';`);
   }
 
-  // 添加 class-transformer 导入
   if (usedTransformerDecorators.size > 0) {
     const decorators = Array.from(usedTransformerDecorators).join(', ');
-    importStatements.push(`import { ${decorators} } from 'class-transformer';`);
+    thirdPartyImports.push(
+      `import { ${decorators} } from 'class-transformer';`,
+    );
+  }
+
+  // 将第三方包合并为一个组，用换行符分隔（不需要空行）
+  if (thirdPartyImports.length > 0) {
+    importStatements.push(thirdPartyImports.join('\n'));
   }
 
   // 添加枚举导入
@@ -79,7 +87,7 @@ export function renderImports(
     return '';
   }
 
-  // 按照指定顺序排列导入语句，中间添加空行
+  // 按照指定顺序排列导入语句，不同组之间添加空行
   return importStatements.join('\n\n') + '\n';
 }
 

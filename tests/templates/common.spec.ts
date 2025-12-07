@@ -63,7 +63,7 @@ describe('模板渲染公共函数', () => {
       const result = renderProp(field, false, false);
       expect(result).toBe(
         `@ApiPropertyOptional({ type: String })
-@IsOptional()
+  @IsOptional()
   description: string | null`,
       );
     });
@@ -81,7 +81,7 @@ describe('模板渲染公共函数', () => {
       const result = renderProp(field, false, false);
       expect(result).toBe(
         `@ApiPropertyOptional({ type: [String], isArray: true })
-@IsOptional()
+  @IsOptional()
   tags: string[] | null`,
       );
     });
@@ -115,7 +115,7 @@ describe('模板渲染公共函数', () => {
       const result = renderProp(field, false, false);
       expect(result).toBe(
         `@ApiPropertyOptional({ type: Object })
-@IsOptional()
+  @IsOptional()
   user: unknown | null`,
       );
     });
@@ -133,7 +133,7 @@ describe('模板渲染公共函数', () => {
       const result = renderProp(field, true, false);
       expect(result).toBe(
         `@ApiPropertyOptional({ type: Number, format: 'int32' })
-@IsOptional()
+  @IsOptional()
   id: number`,
       );
     });
@@ -151,8 +151,8 @@ describe('模板渲染公共函数', () => {
       const result = renderProp(field, false, true);
       expect(result).toBe(
         `@ApiProperty({ type: Date, format: 'date-time' })
-@Type(() => Date)
-@IsDate()
+  @Type(() => Date)
+  @IsDate()
   createdAt: Date`,
       );
     });
@@ -170,8 +170,50 @@ describe('模板渲染公共函数', () => {
       const result = renderProp(field, false, false);
       expect(result).toBe(
         `@ApiProperty({ type: String, format: 'date-time' })
-@IsDateString()
+  @IsDateString()
   createdAt: string`,
+      );
+    });
+
+    test('应该正确缩进装饰器（可选字段和日期装饰器前应有2个空格缩进）', () => {
+      const field: FieldDescriptor = {
+        name: 'createdAt',
+        kind: 'scalar',
+        type: 'DateTime',
+        isList: false,
+        isRequired: false,
+        relationName: undefined,
+      };
+
+      const result = renderProp(field, false, true);
+
+      // 验证装饰器缩进格式
+      const lines = result.split('\n');
+
+      // 第一行：@ApiPropertyOptional 装饰器（无缩进）
+      expect(lines[0]).toBe(
+        `@ApiPropertyOptional({ type: Date, format: 'date-time' })`,
+      );
+
+      // 第二行：@IsOptional 装饰器（2个空格缩进）
+      expect(lines[1]).toBe(`  @IsOptional()`);
+
+      // 第三行：@Type 装饰器（2个空格缩进）
+      expect(lines[2]).toBe(`  @Type(() => Date)`);
+
+      // 第四行：@IsDate 装饰器（2个空格缩进）
+      expect(lines[3]).toBe(`  @IsDate()`);
+
+      // 第五行：属性定义（2个空格缩进）
+      expect(lines[4]).toBe(`  createdAt: Date | null`);
+
+      // 验证整个字符串格式
+      expect(result).toBe(
+        `@ApiPropertyOptional({ type: Date, format: 'date-time' })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  createdAt: Date | null`,
       );
     });
   });
@@ -203,6 +245,66 @@ describe('模板渲染公共函数', () => {
 
       const result = renderImports(model, false);
       expect(result).toBe(`import { ApiProperty } from '@nestjs/swagger';\n`);
+    });
+
+    test('应该正确分组第三方包导入（class-validator 和 class-transformer 放在一起）', () => {
+      const model: ModelDescriptor = {
+        name: 'User',
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+            relationName: undefined,
+          },
+          {
+            name: 'createdAt',
+            kind: 'scalar',
+            type: 'DateTime',
+            isList: false,
+            isRequired: true,
+            relationName: undefined,
+          },
+          {
+            name: 'description',
+            kind: 'scalar',
+            type: 'String',
+            isList: false,
+            isRequired: false,
+            relationName: undefined,
+          },
+        ],
+        enums: [],
+      };
+
+      const result = renderImports(model, false, undefined, true);
+
+      // 验证导入语句结构
+      const lines = result.trim().split('\n');
+
+      // 应该包含官方包、第三方包组（没有枚举，所以只有4行）
+      expect(lines).toHaveLength(4);
+
+      // 官方包单独一行
+      expect(lines[0]).toBe(
+        `import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';`,
+      );
+
+      // 空行分隔
+      expect(lines[1]).toBe('');
+
+      // 第三方包放在一起，用换行符分隔（不需要空行）
+      expect(lines[2]).toBe(
+        `import { IsDate, IsOptional } from 'class-validator';`,
+      );
+      expect(lines[3]).toBe(`import { Type } from 'class-transformer';`);
+
+      // 验证整个字符串格式
+      expect(result).toBe(
+        `import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';\n\nimport { IsDate, IsOptional } from 'class-validator';\nimport { Type } from 'class-transformer';\n`,
+      );
     });
 
     test('应该为包含可选字段的模型生成正确的导入语句', () => {
