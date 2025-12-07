@@ -123,16 +123,16 @@ export function renderProp(
 
   // 添加可选装饰器
   if (isOptional) {
-    decorators.push('@IsOptional()');
+    decorators.push('  @IsOptional()');
   }
 
   // 添加日期类型相关装饰器
   if (isScalar && field.type === 'DateTime') {
     if (useDateType) {
-      decorators.push('@Type(() => Date)');
-      decorators.push('@IsDate()');
+      decorators.push('  @Type(() => Date)');
+      decorators.push('  @IsDate()');
     } else {
-      decorators.push('@IsDateString()');
+      decorators.push('  @IsDateString()');
     }
   }
 
