@@ -17,7 +17,11 @@ export type SwaggerMeta = {
   nullable?: boolean;
 };
 
-export function toTsType(scalar: Scalar, nullable: boolean): string {
+export function toTsType(
+  scalar: Scalar,
+  nullable: boolean,
+  useDateType = true,
+): string {
   let base: string;
 
   switch (scalar) {
@@ -27,7 +31,7 @@ export function toTsType(scalar: Scalar, nullable: boolean): string {
       base = 'string';
       break;
     case 'DateTime':
-      base = 'Date';
+      base = useDateType ? 'Date' : 'string';
       break;
     case 'Int':
     case 'Float':
@@ -49,8 +53,9 @@ export function toTsType(scalar: Scalar, nullable: boolean): string {
 
 export function toSwaggerMeta(
   scalar: Scalar,
-  opts: { isArray?: boolean; nullable?: boolean },
+  opts: { isArray?: boolean; nullable?: boolean; useDateType?: boolean },
 ): SwaggerMeta {
+  const useDateType = opts.useDateType !== false;
   let format: string | undefined;
   switch (scalar) {
     case 'Int':
@@ -82,7 +87,7 @@ export function toSwaggerMeta(
       typeRef = 'Object';
       break;
     case 'DateTime':
-      typeRef = 'Date';
+      typeRef = useDateType ? 'Date' : 'String';
       break;
     case 'Int':
     case 'Float':

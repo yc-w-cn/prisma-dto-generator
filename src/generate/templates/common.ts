@@ -5,15 +5,35 @@ export function renderImports(
   model: ModelDescriptor,
   optionalMode: boolean,
   prismaClientPath?: string,
+  useDateType = true,
 ): string {
-  const usedDecorators = new Set<string>();
+  const usedSwaggerDecorators = new Set<string>();
+  const usedValidatorDecorators = new Set<string>();
+  const usedTransformerDecorators = new Set<string>();
   const usedEnums = new Set<string>();
 
   // 分析模型字段，确定需要哪些装饰器和枚举
   for (const field of model.fields) {
+    if (field.relationName) continue;
+
     const isOptional = optionalMode || !field.isRequired;
-    const decorator = isOptional ? 'ApiPropertyOptional' : 'ApiProperty';
-    usedDecorators.add(decorator);
+    const swaggerDecorator = isOptional ? 'ApiPropertyOptional' : 'ApiProperty';
+    usedSwaggerDecorators.add(swaggerDecorator);
+
+    // 检查是否需要验证器装饰器
+    if (isOptional) {
+      usedValidatorDecorators.add('IsOptional');
+    }
+
+    // 如果是日期类型字段
+    if (field.kind === 'scalar' && field.type === 'DateTime') {
+      if (useDateType) {
+        usedValidatorDecorators.add('IsDate');
+        usedTransformerDecorators.add('Type');
+      } else {
+        usedValidatorDecorators.add('IsDateString');
+      }
+    }
 
     // 如果是枚举字段，记录枚举类型
     if (field.kind === 'enum') {
@@ -25,9 +45,21 @@ export function renderImports(
   const importStatements: string[] = [];
 
   // 添加 @nestjs/swagger 导入
-  if (usedDecorators.size > 0) {
-    const decorators = Array.from(usedDecorators).join(', ');
+  if (usedSwaggerDecorators.size > 0) {
+    const decorators = Array.from(usedSwaggerDecorators).join(', ');
     importStatements.push(`import { ${decorators} } from '@nestjs/swagger';`);
+  }
+
+  // 添加 class-validator 导入
+  if (usedValidatorDecorators.size > 0) {
+    const decorators = Array.from(usedValidatorDecorators).join(', ');
+    importStatements.push(`import { ${decorators} } from 'class-validator';`);
+  }
+
+  // 添加 class-transformer 导入
+  if (usedTransformerDecorators.size > 0) {
+    const decorators = Array.from(usedTransformerDecorators).join(', ');
+    importStatements.push(`import { ${decorators} } from 'class-transformer';`);
   }
 
   // 添加枚举导入
@@ -59,16 +91,17 @@ export function renderJSDoc(title: string, description?: string): string {
 export function renderProp(
   field: FieldDescriptor,
   optionalMode: boolean,
+  useDateType = true,
 ): string {
   const isScalar = field.kind === 'scalar';
   const isEnum = field.kind === 'enum';
   const swagger = isScalar
-    ? toSwaggerMeta(field.type as any, { isArray: field.isList })
+    ? toSwaggerMeta(field.type as any, { isArray: field.isList, useDateType })
     : isEnum
       ? { typeRef: 'String', isArray: field.isList }
       : { typeRef: 'Object', isArray: field.isList };
-  const decorator =
-    optionalMode || !field.isRequired ? 'ApiPropertyOptional' : 'ApiProperty';
+  const isOptional = optionalMode || !field.isRequired;
+  const decorator = isOptional ? 'ApiPropertyOptional' : 'ApiProperty';
   const metaParts = [
     `type: ${swagger.isArray ? `[${swagger.typeRef}]` : swagger.typeRef}`,
     swagger.format ? `format: '${swagger.format}'` : '',
@@ -77,12 +110,34 @@ export function renderProp(
   ].filter(Boolean);
   const meta = metaParts.length ? `{ ${metaParts.join(', ')} }` : '';
   const tsType = isScalar
-    ? toTsType(field.type as any, false)
+    ? toTsType(field.type as any, false, useDateType)
     : isEnum
       ? field.type
       : 'unknown';
+
+  // 生成装饰器数组
+  const decorators: string[] = [];
+
+  // 添加swagger装饰器
+  decorators.push(`@${decorator}(${meta})`);
+
+  // 添加可选装饰器
+  if (isOptional) {
+    decorators.push('@IsOptional()');
+  }
+
+  // 添加日期类型相关装饰器
+  if (isScalar && field.type === 'DateTime') {
+    if (useDateType) {
+      decorators.push('@Type(() => Date)');
+      decorators.push('@IsDate()');
+    } else {
+      decorators.push('@IsDateString()');
+    }
+  }
+
   return [
-    `@${decorator}(${meta})`,
+    ...decorators,
     `  ${field.name}: ${field.isList ? `${tsType}[]` : tsType}${field.isRequired ? '' : ' | null'}`,
   ].join('\n');
 }

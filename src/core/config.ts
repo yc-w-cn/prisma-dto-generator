@@ -5,6 +5,7 @@ export type GeneratorConfig = {
   emitUpdateReadonly: boolean;
   swaggerLibrary: 'nestjs';
   prismaClientPath?: string;
+  useDateType: boolean;
 };
 
 export function parseConfig(
@@ -37,10 +38,12 @@ export function parseConfig(
   const emitUpdateReadonly = pickBool(input.emitUpdateReadonly, false);
   const swaggerLibrary = 'nestjs' as const;
   const prismaClientPath = pickStrOpt(input.prismaClientPath);
+  const useDateType = pickBool(input.useDateType, true);
   return {
     output,
     emitUpdateReadonly,
     swaggerLibrary,
     prismaClientPath,
+    useDateType,
   };
 }
