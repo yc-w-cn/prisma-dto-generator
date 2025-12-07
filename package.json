@@ -35,7 +35,7 @@
     "test:coverage": "jest --coverage",
     "clean": "rm -rf dist",
     "lint": "eslint src/**/*.ts",
-    "prepublishOnly": "npm run clean && npm run build && npm run test",
+    "prepublishOnly": "pnpm run clean && pnpm run build && pnpm run test",
     "publish": "npm publish --access public"
   },
   "dependencies": {
