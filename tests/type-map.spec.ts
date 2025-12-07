@@ -29,6 +29,18 @@ describe('类型映射', () => {
       expect(toTsType(invalidScalar, true)).toBe('any | null');
     });
 
+    it('应该处理未知标量类型的Swagger元数据（第60行default分支）', () => {
+      // 测试未知标量类型在toSwaggerMeta函数中的default分支
+      const invalidScalar = 'InvalidScalar' as any;
+      const result = toSwaggerMeta(invalidScalar, {});
+
+      // 验证默认类型为'String'
+      expect(result.typeRef).toBe('String');
+      expect(result.format).toBeUndefined();
+      expect(result.isArray).toBe(false);
+      expect(result.nullable).toBe(false);
+    });
+
     // 测试 useDateType: false 的情况
     test('应该正确处理DateTime类型不使用Date类型的情况', () => {
       expect(toTsType('DateTime', false, false)).toBe('string');
