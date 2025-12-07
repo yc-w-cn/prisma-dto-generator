@@ -21,11 +21,34 @@ describe('类型映射', () => {
       expect(toTsType('Int', true)).toBe('number | null');
       expect(toTsType('Boolean', true)).toBe('boolean | null');
     });
+
+    // 测试 useDateType: false 的情况
+    test('应该正确处理DateTime类型不使用Date类型的情况', () => {
+      expect(toTsType('DateTime', false, false)).toBe('string');
+      expect(toTsType('DateTime', true, false)).toBe('string | null');
+    });
   });
 
   describe('Swagger元数据生成', () => {
     // 测试基本类型的Swagger元数据
     test('应该为基本类型生成正确的Swagger元数据', () => {
+      // 测试第48行未覆盖的代码
+      expect(
+        toSwaggerMeta('Json', { isArray: false, nullable: false }),
+      ).toEqual({
+        typeRef: 'Object',
+        format: undefined,
+        isArray: false,
+        nullable: false,
+      });
+
+      // 测试第87-88行未覆盖的代码
+      expect(toSwaggerMeta('Json', { isArray: true, nullable: true })).toEqual({
+        typeRef: 'Object',
+        format: undefined,
+        isArray: true,
+        nullable: true,
+      });
       expect(toSwaggerMeta('Int', { isArray: false, nullable: false })).toEqual(
         {
           typeRef: 'Number',
@@ -47,6 +70,22 @@ describe('类型映射', () => {
       ).toEqual({
         typeRef: 'Boolean',
         format: undefined,
+        isArray: false,
+        nullable: false,
+      });
+    });
+
+    // 测试 useDateType: false 的情况
+    test('应该正确处理DateTime类型不使用Date类型的情况', () => {
+      expect(
+        toSwaggerMeta('DateTime', {
+          isArray: false,
+          nullable: false,
+          useDateType: false,
+        }),
+      ).toEqual({
+        typeRef: 'String',
+        format: 'date-time',
         isArray: false,
         nullable: false,
       });

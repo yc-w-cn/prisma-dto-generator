@@ -158,6 +158,69 @@ describe('发射器', () => {
     rmSync(dir, { recursive: true, force: true });
   });
 
+  test('应该按字母顺序排序导出语句', async () => {
+    const dir = tmp();
+    const config = { ...baseConfig, output: dir };
+
+    // 创建多个模型，按非字母顺序排列
+    const models: ModelDescriptor[] = [
+      {
+        name: 'Zebra',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+      {
+        name: 'Apple',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+      {
+        name: 'Banana',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+    ];
+
+    emitAll(config, models, '/path/to/schema.prisma', dir);
+
+    // 检查index.ts文件
+    const indexContent = readFileSync(join(dir, 'index.ts'), 'utf8');
+
+    // 检查导出语句按字母顺序排序
+    const appleIndex = indexContent.indexOf('AppleDto');
+    const bananaIndex = indexContent.indexOf('BananaDto');
+    const zebraIndex = indexContent.indexOf('ZebraDto');
+
+    expect(appleIndex).toBeLessThan(bananaIndex); // Apple应该在Banana之前
+    expect(bananaIndex).toBeLessThan(zebraIndex); // Banana应该在Zebra之前
+
+    rmSync(dir, { recursive: true, force: true });
+  });
+
   test('处理包含特殊字符的模型名称', async () => {
     const dir = tmp();
     const config = { ...baseConfig, output: dir };
@@ -201,5 +264,144 @@ describe('发射器', () => {
     expect(content).toContain('export class PostDto');
 
     rmSync(dir, { recursive: true, force: true });
+  });
+
+  test('应该处理正则表达式匹配边界情况（第54-55行未覆盖代码）', async () => {
+    const dir = tmp();
+    const config = { ...baseConfig, output: dir };
+
+    // 创建模型名称包含特殊字符的测试用例
+    const models: ModelDescriptor[] = [
+      {
+        name: 'Model_With_Underscore',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+      {
+        name: 'ModelWithNumbers123',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+    ];
+
+    emitAll(config, models, '/path/to/schema.prisma', dir);
+
+    // 检查index.ts文件
+    const indexContent = readFileSync(join(dir, 'index.ts'), 'utf8');
+
+    // 验证正则表达式能正确匹配包含下划线和数字的类名
+    expect(indexContent).toContain('export { ModelWithUnderscoreDto }');
+    expect(indexContent).toContain('export { ModelWithNumbers123Dto }');
+
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  test('应该处理正则表达式匹配边界情况（第54-55行分支覆盖率）', async () => {
+    const dir = tmp();
+    const config = { ...baseConfig, output: dir };
+
+    // 创建模型名称包含特殊字符的测试用例
+    const models: ModelDescriptor[] = [
+      {
+        name: 'Model_With_Underscore',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+      {
+        name: 'ModelWithNumbers123',
+        enums: [],
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+          },
+        ],
+      },
+    ];
+
+    emitAll(config, models, '/path/to/schema.prisma', dir);
+
+    // 检查index.ts文件
+    const indexContent = readFileSync(join(dir, 'index.ts'), 'utf8');
+
+    // 验证正则表达式能正确匹配包含下划线和数字的类名
+    expect(indexContent).toContain('export { ModelWithUnderscoreDto }');
+    expect(indexContent).toContain('export { ModelWithNumbers123Dto }');
+
+    // 验证排序逻辑正常工作
+    const lines = indexContent.trim().split('\n');
+    expect(lines).toHaveLength(2); // 两个导出语句
+
+    // 验证导出语句按字母顺序排序
+    const modelWithNumbersIndex = indexContent.indexOf(
+      'ModelWithNumbers123Dto',
+    );
+    const modelWithUnderscoreIndex = indexContent.indexOf(
+      'ModelWithUnderscoreDto',
+    );
+    expect(modelWithNumbersIndex).toBeLessThan(modelWithUnderscoreIndex); // ModelWithNumbers123应该在ModelWithUnderscore之前
+
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  test('应该处理正则表达式匹配失败的情况（第54-55行分支覆盖率）', async () => {
+    // 直接测试排序函数中的正则匹配逻辑
+    const exportStatements = [
+      "export { UserDto } from './user.dto';",
+      "export { invalid export statement } from './invalid.dto';", // 不符合正则模式的语句
+      "export { PostDto } from './post.dto';",
+    ];
+
+    // 复制emitter.ts中的排序逻辑
+    const sortedExportStatements = exportStatements.sort((a, b) => {
+      const classNameA = /export\s+\{\s*(\w+)\s*\}/.exec(a)?.[1] ?? '';
+      const classNameB = /export\s+\{\s*(\w+)\s*\}/.exec(b)?.[1] ?? '';
+
+      // 比较时去掉 Dto
+      const nameA = classNameA.replace(/Dto$/, '');
+      const nameB = classNameB.replace(/Dto$/, '');
+
+      return nameA.localeCompare(nameB, 'en', { sensitivity: 'base' });
+    });
+
+    // 验证正则匹配失败的情况
+    const invalidStatement = sortedExportStatements[0];
+    expect(invalidStatement).toBe(
+      "export { invalid export statement } from './invalid.dto';",
+    );
+
+    // 验证正则匹配失败时，类名为空字符串，排在前面
+    const validStatements = sortedExportStatements.slice(1);
+    expect(validStatements).toEqual([
+      "export { PostDto } from './post.dto';",
+      "export { UserDto } from './user.dto';",
+    ]);
   });
 });

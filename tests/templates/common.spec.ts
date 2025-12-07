@@ -216,6 +216,36 @@ describe('模板渲染公共函数', () => {
   createdAt: Date | null`,
       );
     });
+
+    test('应该处理对象类型属性（第119行未覆盖代码）', () => {
+      const field: FieldDescriptor = {
+        name: 'user',
+        kind: 'object',
+        type: 'User',
+        isList: false,
+        isRequired: true,
+        relationName: 'UserPosts',
+      };
+
+      const result = renderProp(field, false, false);
+      expect(result).toBe(`@ApiProperty({ type: Object })\n  user: unknown`);
+    });
+
+    test('应该处理optionalMode为true时的对象类型属性（第17行未覆盖代码）', () => {
+      const field: FieldDescriptor = {
+        name: 'user',
+        kind: 'object',
+        type: 'User',
+        isList: false,
+        isRequired: true,
+        relationName: 'UserPosts',
+      };
+
+      const result = renderProp(field, true, false);
+      expect(result).toBe(
+        `@ApiPropertyOptional({ type: Object })\n  @IsOptional()\n  user: unknown`,
+      );
+    });
   });
 
   describe('renderImports 函数', () => {
@@ -365,6 +395,56 @@ describe('模板渲染公共函数', () => {
       expect(result).toBe(
         `import { ApiProperty } from '@nestjs/swagger';\n\nimport { UserRole } from '@/generated/prisma-client/enums';\n`,
       );
+    });
+
+    test('应该跳过关联字段（第17行未覆盖代码）', () => {
+      const model: ModelDescriptor = {
+        name: 'Post',
+        fields: [
+          {
+            name: 'id',
+            kind: 'scalar',
+            type: 'Int',
+            isList: false,
+            isRequired: true,
+            relationName: undefined,
+          },
+          {
+            name: 'title',
+            kind: 'scalar',
+            type: 'String',
+            isList: false,
+            isRequired: true,
+            relationName: undefined,
+          },
+          {
+            name: 'author',
+            kind: 'object',
+            type: 'User',
+            isList: false,
+            isRequired: true,
+            relationName: 'PostAuthor',
+          },
+          {
+            name: 'comments',
+            kind: 'object',
+            type: 'Comment',
+            isList: true,
+            isRequired: false,
+            relationName: 'PostComments',
+          },
+        ],
+        enums: [],
+      };
+
+      const result = renderImports(model, false);
+
+      // 关联字段应该被跳过，只生成非关联字段的导入
+      expect(result).toBe(`import { ApiProperty } from '@nestjs/swagger';\n`);
+
+      // 验证没有生成关联字段相关的装饰器导入
+      expect(result).not.toContain('IsOptional');
+      expect(result).not.toContain('ApiPropertyOptional');
     });
 
     test('应该为包含多个枚举的模型生成正确的导入语句', () => {
