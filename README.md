@@ -13,9 +13,10 @@
 
 - **🚀 自动 DTO 生成**: 基于 Prisma Schema 自动生成对应的 DTO 类
 - **📋 基础 DTO 生成**: 为每个模型生成基础 DTO，包含所有模型字段
-
 - **🎯 Swagger 优化**: 专门针对 Swagger/OpenAPI 文档格式优化
 - **🔧 高度可配置**: 支持灵活的输出配置和生成选项
+- **✨ 代码格式优化**: 自动优化装饰器缩进和导入语句分组
+- **📏 格式一致性**: 确保生成的代码符合最佳代码格式规范
 
 ## 支持的 Prisma Providers
 
@@ -134,6 +135,21 @@ generator dto {
 - `useDateType`: 是否将 DateTime 字段生成为 Date 类型（默认：`true`）
   - `true`: 生成 `Date` 类型，需要配合 `class-transformer` 和全局管道使用
   - `false`: 生成 `string` 类型，使用 `@IsDateString()` 验证
+
+#### 代码格式优化特性
+
+生成器会自动优化生成的代码格式，确保符合最佳实践：
+
+- **装饰器缩进**: 
+  - `@ApiProperty` 装饰器无缩进
+  - `@IsOptional()`、`@Type()`、`@IsDate()`、`@IsDateString()` 等装饰器前保持 2 个空格缩进
+  - 属性定义前保持 2 个空格缩进
+
+- **导入语句分组**:
+  - 官方包（`@nestjs/swagger`）单独一组
+  - 第三方包（`class-validator` 和 `class-transformer`）合并为一组，包间使用换行分隔
+  - 枚举导入单独一组
+  - 不同包组间使用空行分隔，提升代码可读性
 
 ### 3. 运行生成
 
