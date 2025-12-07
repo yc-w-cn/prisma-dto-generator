@@ -361,6 +361,34 @@ export class UserDto {
 }
 ```
 
+## CI/CD 和测试覆盖率
+
+本项目使用 GitHub Actions 进行持续集成，并集成 Codecov 进行测试覆盖率监控。
+
+### 持续集成 (CI)
+
+- **自动测试**: 每次推送代码到 main 或 develop 分支，以及创建 pull request 到 main 分支时，会自动运行测试
+- **多版本支持**: 支持 Node.js 20 版本测试
+- **依赖缓存**: 使用 pnpm 缓存机制加速 CI 运行
+
+### 测试覆盖率
+
+[![codecov](https://codecov.io/github/yc-w-cn/prisma-dto-generator/graph/badge.svg?token=90F31MACL6)](https://codecov.io/github/yc-w-cn/prisma-dto-generator)
+
+- **覆盖率报告**: 每次 CI 运行后自动上传测试覆盖率报告到 Codecov
+- **详细分析**: 可以在 Codecov 网站上查看详细的覆盖率分析报告
+- **徽章显示**: README 中显示实时测试覆盖率状态
+
+### 本地测试
+
+```bash
+# 运行测试
+pnpm test
+
+# 运行测试并生成覆盖率报告
+pnpm test:coverage
+```
+
 ## 贡献
 
 欢迎提交 [Issue](https://github.com/yc-w-cn/prisma-dto-generator/issues) 和 [Pull Request](https://github.com/yc-w-cn/prisma-dto-generator/pulls) 来改进这个项目！

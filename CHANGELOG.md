@@ -2,6 +2,20 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.3.2] - 2025-12-07
+
+### 新增
+- **CI/CD 集成**: 添加 GitHub Actions 工作流，支持自动测试和覆盖率上传
+- **Codecov 集成**: 集成 Codecov 进行测试覆盖率监控，添加实时覆盖率徽章
+- **README 更新**: 添加 CI/CD 和测试覆盖率说明文档
+
+### 变更
+- **优化 CI 配置**: 使用 Ubuntu 22.04 环境，支持 Node.js 20 版本测试
+- **改进 pnpm 配置**: 移除冗余版本指定，自动使用 package.json 中的版本
+
+### 修复
+- **修复 CI 错误**: 解决 pnpm 版本冲突和命令语法问题
+
 ## [v0.3.1] - 2025-12-07
 
 ### 新增
