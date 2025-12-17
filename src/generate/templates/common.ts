@@ -114,6 +114,7 @@ export function renderProp(
     `type: ${swagger.isArray ? `[${swagger.typeRef}]` : swagger.typeRef}`,
     swagger.format ? `format: '${swagger.format}'` : '',
     swagger.isArray ? `isArray: true` : '',
+    isEnum ? `enum: ${field.type}` : '',
     '',
   ].filter(Boolean);
   const meta = metaParts.length ? `{ ${metaParts.join(', ')} }` : '';
