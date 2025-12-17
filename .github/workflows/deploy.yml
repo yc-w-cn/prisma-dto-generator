@@ -1,7 +1,13 @@
 name: Publish Package
+
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   publish:
@@ -15,49 +21,6 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: pnpm
           always-auth: true
-      - name: Check publish eligibility
-        id: check
-        shell: bash
-        run: |
-          set -e
-          TAG="${{ github.event.release.tag_name }}"
-          git fetch --tags --force
-          LATEST_TAG="$(git tag --list 'v*' --sort=-version:refname | head -n 1)"
-          if [ -z "$LATEST_TAG" ]; then
-            echo "eligible=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ "$TAG" != "$LATEST_TAG" ]; then
-            echo "eligible=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          NAME="$(node -p "require('./package.json').name")"
-          VERSION="$(node -p "require('./package.json').version")"
-          EXPECTED_TAG="v$VERSION"
-          if [ "$TAG" != "$EXPECTED_TAG" ]; then
-            echo "eligible=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          REG_VERSION="$(npm view "$NAME" version --registry=https://registry.npmjs.org || true)"
-          if [ -z "$REG_VERSION" ]; then
-            REG_VERSION="0.0.0"
-          fi
-          IFS=. read -r MAJ MIN PAT <<< "$VERSION"
-          IFS=. read -r RMAJ RMIN RPAT <<< "$REG_VERSION"
-          MAJ=${MAJ:-0}; MIN=${MIN:-0}; PAT=${PAT:-0}
-          RMAJ=${RMAJ:-0}; RMIN=${RMIN:-0}; RPAT=${RPAT:-0}
-          if [ "$MAJ" -gt "$RMAJ" ] || \
-            { [ "$MAJ" -eq "$RMAJ" ] && [ "$MIN" -gt "$RMIN" ]; } || \
-            { [ "$MAJ" -eq "$RMAJ" ] && [ "$MIN" -eq "$RMIN" ] && [ "$PAT" -gt "$RPAT" ]; }; then
-            echo "eligible=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "eligible=false" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Install dependencies
-        if: "${{ steps.check.outputs.eligible == 'true' }}"
-        run: pnpm install --frozen-lockfile
-      - name: Publish to npm
-        if: "${{ steps.check.outputs.eligible == 'true' }}"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm publish --access public
+      - run: pnpm install
+      - run: pnpm run build
+      - run: npm publish
