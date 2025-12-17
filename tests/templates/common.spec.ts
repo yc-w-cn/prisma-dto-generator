@@ -98,7 +98,7 @@ describe('模板渲染公共函数', () => {
 
       const result = renderProp(field, false);
       expect(result).toBe(
-        `@ApiProperty({ type: String, enum: PostStatus })\n  status: PostStatus`,
+        `@ApiProperty({ type: String, enum: PostStatus, enumName: 'PostStatus' })\n  status: PostStatus`,
       );
     });
 

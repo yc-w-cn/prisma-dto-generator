@@ -35,6 +35,7 @@ describe('基础DTO', () => {
     expect(result).toMatch('export class UserDto');
     expect(result).toMatch('ApiProperty');
     expect(result).toMatch('roles: Role[]');
+    expect(result).toMatch("enumName: 'Role'");
   });
 
   test('应该为没有字段的模型生成空类', () => {
