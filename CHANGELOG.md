@@ -2,6 +2,11 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.3.4] - 2025-12-17
+
+### 新增
+- 为枚举字段在 `@ApiProperty` 中新增 `enumName` 选项，配合 `enum` 一同输出，提升 Swagger 枚举展示与兼容性
+
 ## [v0.3.3] - 2025-12-17
 
 ### 新增

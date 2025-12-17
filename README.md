@@ -5,7 +5,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@yc-w-cn/prisma-dto-generator.svg)](https://www.npmjs.com/package/@yc-w-cn/prisma-dto-generator)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-Wang%20Yuchen-orange.svg)](mailto:contact@wangyuchen.cn)
-[![Version](https://img.shields.io/badge/Version-v0.3.3-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-v0.3.4-blue.svg)](CHANGELOG.md)
 [![codecov](https://codecov.io/github/yc-w-cn/prisma-dto-generator/graph/badge.svg?token=90F31MACL6)](https://codecov.io/github/yc-w-cn/prisma-dto-generator)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yc-w-cn/prisma-dto-generator)
 
