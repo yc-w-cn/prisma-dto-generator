@@ -2,6 +2,11 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 格式规范。
 
+## [v0.3.3] - 2025-12-17
+
+### 新增
+- 为枚举字段在 `@ApiProperty` 中标注 `enum` 属性，提升 Swagger 枚举展示与校验准确性
+
 ## [v0.3.2] - 2025-12-07
 
 ### 新增
